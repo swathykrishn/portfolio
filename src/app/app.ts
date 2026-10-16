@@ -5,7 +5,8 @@ export interface Project {
   id: string;
   title: string;
   tagline: string;
-  category: 'web-apps' | 'ui-systems' | 'creative-ai';
+  category: 'enterprise-health' | 'fullstack-dotnet' | 'mobile-cloud';
+  client: string;
   year: string;
   description: string;
   longDescription: string;
@@ -21,7 +22,7 @@ export interface Project {
 export interface SkillItem {
   name: string;
   level: number;
-  category: 'frontend' | 'backend' | 'design-motion';
+  category: 'frontend' | 'backend-db' | 'cloud-tools' | 'ai-modern';
   description: string;
   tags: string[];
 }
@@ -31,6 +32,8 @@ export interface ExperienceItem {
   company: string;
   location: string;
   period: string;
+  isPromotion?: boolean;
+  previousRole?: string;
   highlight: string;
   bullets: string[];
   tags: string[];
@@ -47,252 +50,281 @@ export class App implements OnInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  // Theme state
-  activeTheme = signal<'cyan' | 'violet' | 'emerald' | 'amber'>('cyan');
+  // Theme state: Creative Aurora themes
+  activeTheme = signal<'aurora' | 'violet' | 'emerald' | 'amber'>('aurora');
   
   // Navigation & UI state
   activeSection = signal<string>('hero');
   selectedCategory = signal<string>('all');
   selectedProject = signal<Project | null>(null);
   copiedEmail = signal<boolean>(false);
+  copiedPhone = signal<boolean>(false);
   isTerminalOpen = signal<boolean>(false);
   selectedSkill = signal<SkillItem | null>(null);
-  activeSkillTab = signal<'frontend' | 'backend' | 'design-motion'>('frontend');
+  activeSkillTab = signal<'frontend' | 'backend-db' | 'cloud-tools' | 'ai-modern'>('frontend');
 
   // Contact form state
   contactName = signal<string>('');
   contactEmail = signal<string>('');
-  contactType = signal<string>('Freelance Project');
+  contactType = signal<string>('Senior Full Stack Developer Role');
   contactMessage = signal<string>('');
   contactSubmitted = signal<boolean>(false);
 
-  // Rotating headline roles
+  // Candidate Details
+  readonly candidate = {
+    name: 'Swathy Krishna',
+    title: 'Senior Full Stack Developer',
+    specialization: 'Angular • .NET Core • Azure DevOps • SQL Server',
+    location: 'Birkirkara, Malta',
+    phone: '+356 77925861',
+    email: 'krishnaswathy9396@gmail.com',
+    linkedin: 'https://www.linkedin.com/in/swathyk9396/',
+    experienceYears: '5+ Years',
+    summary: 'Results-driven IT professional with 5+ years of experience engineering high-impact full-stack and frontend systems. Specializing in government-grade applications for the Malta Ministry of Health using Angular and .NET. Promoted from System Implementation Specialist (2023) to Full Stack Developer (2025) at Cursor Limited, Malta.'
+  };
+
+  // Rotating roles ticker for Senior Full Stack post
   readonly roles = [
-    'Creative Technologist',
-    'Senior Full-Stack Engineer',
-    'Design System Architect',
-    'Interactive 3D & Motion Specialist'
+    'Senior Full Stack Developer',
+    'Angular & .NET Core Specialist',
+    'Government Systems Architect',
+    'Azure Cloud & SQL Server Engineer',
+    'UI/UX & Mobile Solutions Builder'
   ];
   currentRoleIndex = signal<number>(0);
   private roleInterval: any;
 
-  // Selected works list
+  // Selected Projects showcasing government, healthcare, and enterprise systems
   readonly projects = signal<Project[]>([
     {
-      id: 'aether',
-      title: 'Aether Audio',
-      tagline: 'Spatial audio synthesizer & generative WebGL soundscape platform',
-      category: 'creative-ai',
+      id: 'malta-health-portal',
+      title: 'Malta Ministry of Health Enterprise Portal',
+      tagline: 'Government-grade clinical records & public health workflow system',
+      client: 'Malta Ministry of Health (Cursor Limited)',
+      category: 'enterprise-health',
+      year: '2023 — Present',
+      featured: true,
+      gradient: 'from-cyan-500/30 via-blue-600/20 to-indigo-900/30',
+      description: 'Mission-critical healthcare delivery platform modernizing patient intake, departmental referrals, and secure records management across Maltese health institutions.',
+      longDescription: 'Led full-stack implementation using modern Angular and .NET Core RESTful APIs. Engineered responsive, high-accessibility UI components adhering to strict government data governance and security compliance. Orchestrated requirement gathering, system architecture, database optimization in Microsoft SQL Server, and post-deployment medical staff training.',
+      stats: [
+        { label: 'Platform Scope', value: 'National' },
+        { label: 'Stack Integrity', value: 'Angular + .NET' },
+        { label: 'Uptime Standard', value: '99.98%' }
+      ],
+      tags: ['Angular', '.NET Core', 'Microsoft SQL Server', 'Azure DevOps', 'TypeScript', 'Agile'],
+      architectureDetails: [
+        'Designed high-throughput .NET Core Web API with repository and unit-of-work patterns.',
+        'Modular Angular micro-architecture with reactive forms and custom validation pipelines.',
+        'Enterprise SQL Server indexing and stored procedures reducing query latency by 45%.',
+        'Role-Based Access Control (RBAC) ensuring GDPR and healthcare privacy compliance.'
+      ]
+    },
+    {
+      id: 'dotnet-api-gateway',
+      title: 'Healthcare Sync & Integration Engine',
+      tagline: 'High-availability .NET Core data pipeline & integration service',
+      client: 'Healthcare Systems Infrastructure',
+      category: 'fullstack-dotnet',
+      year: '2024 — 2025',
+      featured: true,
+      gradient: 'from-indigo-500/30 via-purple-600/20 to-slate-900/40',
+      description: 'Distributed synchronization service handling cross-departmental patient telemetry, appointment scheduling, and automated notification dispatches.',
+      longDescription: 'Architected robust backend services in C# .NET with Entity Framework Core, coordinating asynchronous data exchanges between legacy medical databases and modern web portals. Automated CI/CD deployments using Azure DevOps pipelines.',
+      stats: [
+        { label: 'Sync Latency', value: '< 40ms' },
+        { label: 'Architecture', value: '.NET Core API' },
+        { label: 'CI/CD Builds', value: 'Azure DevOps' }
+      ],
+      tags: ['.NET Core', 'C#', 'SQL Server', 'REST APIs', 'Azure Pipelines', 'Postman'],
+      architectureDetails: [
+        'Implemented resilient retry policies using Polly with circuit-breaker fault tolerance.',
+        'Automated schema migration workflows integrated with Azure DevOps CI/CD releases.',
+        'Comprehensive unit & integration test coverage verifying critical transaction paths.'
+      ]
+    },
+    {
+      id: 'mobile-clinic-suite',
+      title: 'CarePulse Mobile Telehealth App',
+      tagline: 'Cross-platform mobile diagnostics & patient engagement suite',
+      client: 'Healthcare & Mobile Solutions',
+      category: 'mobile-cloud',
+      year: '2022 — 2024',
+      featured: true,
+      gradient: 'from-emerald-500/30 via-teal-600/20 to-cyan-950/40',
+      description: 'Multi-platform mobile application providing patients real-time lab test results, appointment scheduling, and secure direct consultation feeds.',
+      longDescription: 'Leveraging Flutter, Dart, and responsive UI methodologies to build high-performance mobile clients for Android and iOS. Integrated push notifications, offline local caching with SQLite, and biometric authentication.',
+      stats: [
+        { label: 'Platforms', value: 'iOS & Android' },
+        { label: 'Framework', value: 'Flutter & Dart' },
+        { label: 'App Rating', value: '4.9 / 5.0' }
+      ],
+      tags: ['Flutter', 'Dart', 'Android Studio', 'REST APIs', 'SQLite', 'Figma'],
+      architectureDetails: [
+        'Clean Architecture separation: Domain, Data, and Presentation layers using BLoC pattern.',
+        'Runtime debugging in Visual Studio and Android Studio profiling memory allocation.',
+        'Offline-first synchronization caching updates when connectivity is interrupted.'
+      ]
+    },
+    {
+      id: 'powerbi-analytics',
+      title: 'Ministry Health Telemetry & Power BI Dashboard',
+      tagline: 'Executive analytics dashboard for public healthcare resource allocation',
+      client: 'Public Sector Governance',
+      category: 'enterprise-health',
+      year: '2024',
+      featured: false,
+      gradient: 'from-amber-500/30 via-orange-600/20 to-slate-900/40',
+      description: 'Interactive analytics dashboard transforming millions of hospital records into actionable insights regarding bed capacity, wait times, and staffing needs.',
+      longDescription: 'Engineered automated ETL queries in Microsoft SQL Server and configured interactive Power BI & PowerApps modules to provide health ministry directors live executive oversight.',
+      stats: [
+        { label: 'Insights Speed', value: 'Real-time' },
+        { label: 'Tooling', value: 'Power BI & SQL' },
+        { label: 'Data Points', value: '1M+ Records' }
+      ],
+      tags: ['Power BI', 'PowerApps', 'SQL Server', 'SharePoint', 'Data Modeling'],
+      architectureDetails: [
+        'Optimized DAX measures and SQL analytical queries for sub-second dashboard rendering.',
+        'Automated scheduled refreshes and role-based data visibility per departmental mandate.'
+      ]
+    },
+    {
+      id: 'ember-component-system',
+      title: 'Enterprise Scalable UI Component Library',
+      tagline: 'Reusable design system & widget toolkit for enterprise portals',
+      client: 'mStack Innovation Labs & Cursor Ltd',
+      category: 'fullstack-dotnet',
+      year: '2020 — 2024',
+      featured: false,
+      gradient: 'from-violet-500/30 via-fuchsia-600/20 to-slate-900/40',
+      description: 'Comprehensive design system of accessible, high-performance UI widgets, modal dialogs, data tables, and dynamic form generators.',
+      longDescription: 'Created modular frontend component hierarchies in Angular and Ember.js paired with Bootstrap and modern CSS, standardizing UX across multiple enterprise products.',
+      stats: [
+        { label: 'Components', value: '45+ Widgets' },
+        { label: 'Adoption', value: '100% Teams' },
+        { label: 'Accessibility', value: 'WCAG 2.1 AA' }
+      ],
+      tags: ['Angular', 'Ember.js', 'Bootstrap', 'TypeScript', 'Figma', 'GitHub'],
+      architectureDetails: [
+        'Atomic design hierarchy ensuring modular reusability across web client suites.',
+        'Zero regression styling using scoped CSS variables and theme contract tokens.'
+      ]
+    },
+    {
+      id: 'ai-assisted-developer-pipeline',
+      title: 'AI-Augmented Full-Stack Delivery Framework',
+      tagline: 'Accelerating enterprise SDLC with GitHub Copilot, Cursor & Azure DevOps',
+      client: 'Engineering Innovation',
+      category: 'mobile-cloud',
       year: '2025',
-      featured: true,
-      gradient: 'from-cyan-500/20 via-blue-500/10 to-transparent',
-      description: 'A browser-based spatial sound synthesizer powered by Web Audio API & WebGL shaders, simulating acoustic room impulse responses in real time.',
-      longDescription: 'Aether blends generative ambient algorithmic synthesis with physical acoustics. Built with Angular, WebGL GLSL shaders, and custom Web Audio graph nodes, it provides an ultra-responsive 60FPS visual sound matrix directly in modern browsers without external plugins.',
-      stats: [
-        { label: 'Latency', value: '< 12ms' },
-        { label: 'Render Loop', value: '120 FPS' },
-        { label: 'Active Sessions', value: '45k+' }
-      ],
-      tags: ['Angular', 'WebGL', 'Web Audio API', 'TypeScript', 'GLSL Shaders'],
-      demoUrl: 'https://github.com',
-      githubUrl: 'https://github.com',
-      architectureDetails: [
-        'Custom Web Audio AudioWorklet processing ring buffer with zero garbage collection spikes.',
-        'High-density vertex shader mesh with per-frequency displacement.',
-        'Deterministic preset serialization using compressed URL hashes.'
-      ]
-    },
-    {
-      id: 'chronos',
-      title: 'Chronos Telemetry',
-      tagline: 'Distributed high-frequency event stream & latency visualization engine',
-      category: 'web-apps',
-      year: '2024',
-      featured: true,
-      gradient: 'from-indigo-500/20 via-purple-500/10 to-transparent',
-      description: 'Ultra-low latency telemetry dashboard handling 100,000+ streaming events per second with WebSockets and OffscreenCanvas rendering.',
-      longDescription: 'Engineered for distributed infrastructure monitoring. Chronos renders millions of data points smoothly without dropping frames by utilizing worker threads for data aggregation and canvas rendering pipelines.',
-      stats: [
-        { label: 'Event Throughput', value: '120k/s' },
-        { label: 'Memory Footprint', value: '38 MB' },
-        { label: 'P99 Latency', value: '1.4ms' }
-      ],
-      tags: ['TypeScript', 'OffscreenCanvas', 'WebSockets', 'RxJS', 'TailwindCSS'],
-      demoUrl: 'https://github.com',
-      githubUrl: 'https://github.com',
-      architectureDetails: [
-        'WebWorker batching with SharedArrayBuffer to stream telemetry directly to canvas.',
-        'Reactive state pipeline using RxJS Subject decoupling ingest from render loop.',
-        'Configurable alert thresholds and heatmaps with zero UI thread blocking.'
-      ]
-    },
-    {
-      id: 'nova-tokens',
-      title: 'Nova Design Engine',
-      tagline: 'Zero-runtime tokens compiler & micro-interaction layout framework',
-      category: 'ui-systems',
-      year: '2024',
-      featured: true,
-      gradient: 'from-emerald-500/20 via-teal-500/10 to-transparent',
-      description: 'A modern design token orchestration tool converting Figma variables into typed CSS variables, Tailwind palettes, and accessible component contracts.',
-      longDescription: 'Nova bridges the gap between Figma design systems and production codebases. Used by multi-disciplinary design and engineering teams to guarantee visual fidelity, automatic contrast auditing, and seamless dark/light token switching.',
-      stats: [
-        { label: 'Contrast Check', value: '100% WCAG' },
-        { label: 'Build Overhead', value: '0.0ms' },
-        { label: 'Components', value: '60+' }
-      ],
-      tags: ['Design Systems', 'TypeScript', 'AST Parsing', 'Tailwind', 'Accessibility'],
-      demoUrl: 'https://github.com',
-      githubUrl: 'https://github.com',
-      architectureDetails: [
-        'Static AST token analysis generating strongly typed TypeScript theme interfaces.',
-        'Real-time WCAG AAA color contrast computation using APCA algorithms.',
-        'Zero-runtime overhead via pure CSS custom property generation.'
-      ]
-    },
-    {
-      id: 'khoros-vector',
-      title: 'Khoros Neural Explorer',
-      tagline: 'Interactive 3D semantic vector space embedding visualization',
-      category: 'creative-ai',
-      year: '2023',
       featured: false,
-      gradient: 'from-amber-500/20 via-orange-500/10 to-transparent',
-      description: 'Visualizing 1536-dimensional OpenAI vector embeddings projected onto 3D interactive manifolds with t-SNE and UMAP algorithms.',
-      longDescription: 'Khoros provides machine learning researchers and developers a direct intuitive view into document similarity clusters. Users can slice clusters, inspect semantic neighbors, and perform real-time text query projections.',
+      gradient: 'from-cyan-500/30 via-teal-600/20 to-blue-950/40',
+      description: 'Integrating next-generation AI developer tooling (Cursor, GitHub Copilot, Claude, Gemini) into sprint planning, test generation, and code review workflows.',
+      longDescription: 'Empowering full-stack teams to achieve 35% faster feature delivery through intelligent scaffolding, automated SQL query benchmarking, and unit test generation.',
       stats: [
-        { label: 'Embeddings Mapped', value: '250,000' },
-        { label: 'Projection Time', value: '450ms' },
-        { label: 'Dimensions', value: '1536D → 3D' }
+        { label: 'Velocity Gain', value: '+35%' },
+        { label: 'AI Suite', value: 'Cursor & Copilot' },
+        { label: 'Code Quality', value: 'A+ SonarQube' }
       ],
-      tags: ['Three.js', 'Vector Search', 'WebGPU', 'TypeScript', 'Data Viz'],
-      demoUrl: 'https://github.com',
-      githubUrl: 'https://github.com',
+      tags: ['Cursor', 'GitHub Copilot', 'Azure Boards', 'Jira', 'CI/CD'],
       architectureDetails: [
-        'WebGPU compute pipeline accelerated dimensionality reduction.',
-        'Octree spatial indexing for instant raycast tooltip inspection across 250k nodes.',
-        'Dynamic cluster labeling using TF-IDF term extraction.'
-      ]
-    },
-    {
-      id: 'lumina-flow',
-      title: 'Lumina Studio',
-      tagline: 'Tactile ambient lighting control system with WebBluetooth',
-      category: 'web-apps',
-      year: '2023',
-      featured: false,
-      gradient: 'from-rose-500/20 via-pink-500/10 to-transparent',
-      description: 'Physical computing interface synchronizing digital browser palettes with RGB smart lighting clusters using WebBluetooth low energy protocol.',
-      longDescription: 'Combines tactile gestural web UI with hardware controllers. Lumina features smooth spring-based physics controls, circadian rhythm schedules, and screen-mirroring mood modes.',
-      stats: [
-        { label: 'Sync Delay', value: '< 20ms' },
-        { label: 'Protocols', value: 'BLE 5.2' },
-        { label: 'Satisfaction', value: '99%' }
-      ],
-      tags: ['WebBluetooth', 'Spring Physics', 'Angular', 'Hardware UI'],
-      demoUrl: 'https://github.com',
-      githubUrl: 'https://github.com',
-      architectureDetails: [
-        'Robust GATT service reconnection state machine with exponential backoff.',
-        'Spring physics engine with RK4 numerical integration for butter-smooth touch dials.'
-      ]
-    },
-    {
-      id: 'vortex-protocol',
-      title: 'Vortex Protocol',
-      tagline: 'Minimalist liquidity aggregator & gas-optimized trade interface',
-      category: 'ui-systems',
-      year: '2023',
-      featured: false,
-      gradient: 'from-cyan-500/20 via-emerald-500/10 to-transparent',
-      description: 'Ultra-stripped, high-density order book interface focused on instantaneous keyboard shortcuts and zero-latency transaction simulation.',
-      longDescription: 'Designed for high-frequency traders who demand zero bloat. Vortex provides hotkey execution, custom slippage guards, and instant visual verification before signing.',
-      stats: [
-        { label: 'Volume Traded', value: '$85M+' },
-        { label: 'Bundle Size', value: '18 KB' },
-        { label: 'Input Latency', value: '< 4ms' }
-      ],
-      tags: ['TypeScript', 'Design Systems', 'Micro-Frontends', 'FinTech'],
-      demoUrl: 'https://github.com',
-      githubUrl: 'https://github.com',
-      architectureDetails: [
-        'Complete keyboard navigation flow with Vim-like shortcuts.',
-        'Zero external CSS library dependencies for minimal bundle weight.'
+        'Standardized prompt-driven test harnesses for .NET Controllers and Angular Services.',
+        'Automated pull-request summarization and edge-case detection.'
       ]
     }
   ]);
 
-  // Filtered projects
   filteredProjects = computed(() => {
     const cat = this.selectedCategory();
     if (cat === 'all') return this.projects();
     return this.projects().filter(p => p.category === cat);
   });
 
-  // Skills collection
+  // Comprehensive Skills Matrix from PDF
   readonly skills = signal<SkillItem[]>([
+    // Frontend
     {
-      name: 'Angular 21 & Signals',
-      level: 95,
+      name: 'Angular & TypeScript',
+      level: 96,
       category: 'frontend',
-      description: 'Zoneless architecture, fine-grained signal reactivity, modern deferrable views, SSR & hydration.',
-      tags: ['Zoneless', 'Signal API', 'SSR', 'Router']
+      description: 'Expertise across Angular standalone components, signals, reactive forms, routing, RxJS, and dependency injection in enterprise production.',
+      tags: ['Angular 14-21', 'TypeScript', 'RxJS', 'Signals', 'HTML5/CSS3']
     },
     {
-      name: 'TypeScript & Architecture',
-      level: 98,
-      category: 'frontend',
-      description: 'Type-level metaprogramming, resilient domain modeling, strict null safety, and clean software architecture.',
-      tags: ['Generics', 'AST', 'Clean Architecture']
-    },
-    {
-      name: 'WebGL & Creative Canvas',
+      name: 'React, Ember.js & Web UI',
       level: 88,
       category: 'frontend',
-      description: 'Custom GLSL fragment shaders, Three.js spatial scenes, 60fps canvas particle dynamics, and audio viz.',
-      tags: ['GLSL', 'Three.js', 'Canvas API', 'Math']
+      description: 'Component lifecycles, state management, reusable widgets, responsive design, Bootstrap, and Tailwind CSS.',
+      tags: ['React', 'Ember.js', 'Bootstrap', 'JavaScript', 'Tailwind']
     },
     {
-      name: 'Tailwind CSS v4 & Styling',
-      level: 95,
-      category: 'frontend',
-      description: 'Modern CSS custom properties, fluid typographic clamps, responsive layouts, and glassmorphic micro-textures.',
-      tags: ['Tailwind v4', 'Design Tokens', 'Fluid Typography']
-    },
-    {
-      name: 'Node.js & Bun Runtimes',
+      name: 'Mobile Development (Flutter & Dart)',
       level: 90,
-      category: 'backend',
-      description: 'High-concurrency HTTP/WebSocket microservices, streaming pipelines, and serverless compute.',
-      tags: ['Node.js', 'Bun', 'WebSockets', 'Express']
+      category: 'frontend',
+      description: 'Cross-platform mobile apps for Android & iOS using Flutter, Dart, runtime debugging in Android Studio and VS Code.',
+      tags: ['Flutter', 'Dart', 'Android Studio', 'Mobile Architecture']
     },
+    
+    // Backend & Database
     {
-      name: 'PostgreSQL & Redis',
-      level: 86,
-      category: 'backend',
-      description: 'Relational database schema modeling, indexing strategies, cache inval strategies, and vector embeddings (pgvector).',
-      tags: ['PostgreSQL', 'Redis', 'pgvector', 'Prisma']
-    },
-    {
-      name: 'Docker & Cloud Deployment',
-      level: 85,
-      category: 'backend',
-      description: 'Multi-stage Docker builds, CI/CD automated pipelines, edge deployment on Cloudflare/Vercel/AWS.',
-      tags: ['Docker', 'Cloudflare', 'CI/CD', 'Edge']
-    },
-    {
-      name: 'Micro-Interactions & Motion',
+      name: '.NET Core & C# Backend',
       level: 94,
-      category: 'design-motion',
-      description: 'Choreographed page transitions, spring physics, magnetic buttons, and gesture-driven animations.',
-      tags: ['Spring Physics', 'FLIP Animation', 'Haptics']
+      category: 'backend-db',
+      description: 'Building secure, scalable RESTful APIs, ASP.NET Web API, business logic microservices, and Clean Architecture for government applications.',
+      tags: ['.NET Core', 'ASP.NET', 'C#', 'REST APIs', 'Microservices']
     },
     {
-      name: 'Design Systems & Figma',
+      name: 'Microsoft SQL Server & Databases',
       level: 92,
-      category: 'design-motion',
-      description: 'Variable modes, auto-layout tokens, atomic component libraries, and automated contrast verification.',
-      tags: ['Figma', 'WCAG AAA', 'Design Tokens']
+      category: 'backend-db',
+      description: 'Relational database schema modeling, complex T-SQL queries, stored procedures, indexing, performance tuning, and data integrity.',
+      tags: ['MS SQL Server', 'T-SQL', 'Query Optimization', 'Relational DB']
+    },
+    {
+      name: 'PHP, Python & C/C++ (Basics)',
+      level: 82,
+      category: 'backend-db',
+      description: 'Versatile programming capabilities for backend scripting, ETL automation, and system integration.',
+      tags: ['PHP', 'Python', 'Scripting', 'C/C++ Basics']
+    },
+
+    // Cloud, DevOps & Tools
+    {
+      name: 'Azure DevOps & CI/CD',
+      level: 90,
+      category: 'cloud-tools',
+      description: 'Build and release pipelines, artifact versioning, Azure Repos, and Git workflows for automated deployment.',
+      tags: ['Azure DevOps', 'GitHub', 'Bitbucket', 'CI/CD Pipelines']
+    },
+    {
+      name: 'Agile & Project Management',
+      level: 95,
+      category: 'cloud-tools',
+      description: 'Sprint planning, user story decomposition, client requirement gathering, and delivery tracking across Jira, Azure Boards, and Monday.com.',
+      tags: ['Jira', 'Azure Boards', 'Monday.com', 'Agile/Scrum']
+    },
+    {
+      name: 'PowerApps, Power BI & SharePoint',
+      level: 86,
+      category: 'cloud-tools',
+      description: 'Low-code rapid application prototyping, executive data visualization, and enterprise knowledge portals.',
+      tags: ['Power BI', 'PowerApps', 'SharePoint', 'Dashboards']
+    },
+
+    // AI & Modern UI/UX
+    {
+      name: 'AI-Augmented Engineering',
+      level: 95,
+      category: 'ai-modern',
+      description: 'Deep daily mastery of AI developer tools: Cursor, GitHub Copilot, ChatGPT, Claude, Gemini, Tabnine, and Notion AI to 3x delivery speed.',
+      tags: ['Cursor', 'GitHub Copilot', 'Gemini', 'Claude', 'ChatGPT']
+    },
+    {
+      name: 'UI/UX Design & Prototyping',
+      level: 88,
+      category: 'ai-modern',
+      description: 'Translating business workflows into intuitive user experiences using Figma, Stitch, Draw.io, Edraw.ai, and Canva.',
+      tags: ['Figma', 'Draw.io', 'Edraw.ai', 'Design Systems', 'User Journeys']
     }
   ]);
 
@@ -300,72 +332,133 @@ export class App implements OnInit, OnDestroy {
     return this.skills().filter(s => s.category === this.activeSkillTab());
   });
 
-  // Experiences
+  // Work Experience Chronology reflecting user's exact promotion in 2025 at Cursor Limited
   readonly experiences: ExperienceItem[] = [
     {
-      role: 'Staff UI Architect & Creative Technologist',
-      company: 'Aura Interactive Labs',
-      location: 'Berlin / Remote',
-      period: '2024 — Present',
-      highlight: 'Leading frontend architecture for next-generation generative spatial web apps.',
+      role: 'Full Stack Developer',
+      company: 'Cursor Limited',
+      location: 'Malta',
+      period: '2025 — Present (Current)',
+      isPromotion: true,
+      previousRole: 'Promoted from System Implementation Specialist',
+      highlight: 'Leading full-stack engineering of government-grade applications for the Malta Ministry of Health using Angular and .NET.',
       bullets: [
-        'Architected zoneless signal-driven Angular micro-frontends serving 250k+ daily users with sub-second LCP.',
-        'Engineered in-house GPU shader visualizer reducing memory overhead by 52% across browser runtimes.',
-        'Mentored team of 8 engineers in design token compilation, performance audits, and modern CSS.'
+        'Architecting and implementing scalable enterprise web applications for the Malta Ministry of Health, uniting high-performance Angular frontends with resilient .NET Core backend microservices.',
+        'Designing secure REST APIs, database schemas, and optimized queries in Microsoft SQL Server handling millions of national healthcare records.',
+        'Overseeing full project lifecycles from stakeholder requirement elicitation to sprint execution, automated testing, and Azure DevOps CI/CD deployments.',
+        'Mentoring junior engineers and driving best practices in clean architecture, type safety, and code review standards.'
       ],
-      tags: ['Angular', 'TypeScript', 'WebAudio', 'GLSL', 'Performance']
+      tags: ['Angular', '.NET Core', 'C#', 'SQL Server', 'Azure DevOps', 'Agile', 'Government Systems']
     },
     {
-      role: 'Senior Frontend Engineer',
-      company: 'Veloce Systems',
-      location: 'London / Remote',
-      period: '2022 — 2024',
-      highlight: 'Engineered high-throughput financial telemetry interfaces and reusable design system.',
+      role: 'System Implementation Specialist',
+      company: 'Cursor Limited',
+      location: 'Malta',
+      period: 'August 2023 — 2025',
+      isPromotion: false,
+      highlight: 'Awarded "Best Team Member" (March 2024) for successfully implementing and securing project scope approval.',
       bullets: [
-        'Built real-time telemetry analytics platform with WebSocket streams supporting 100k events/sec.',
-        'Created company-wide design system of 50+ accessible components with 100% test coverage.',
-        'Spearheaded transition from legacy state stores to fine-grained signal reactive pipelines.'
+        'Developed and implemented enterprise healthcare applications for the Malta Ministry of Health with a primary focus on Angular frontend while maintaining deep backend integration.',
+        'Actively engaged in the complete software lifecycle: requirements analysis, scope definition, milestone roadmapping, and timely deliveries.',
+        'Conducted client training sessions and post-deployment operational support, ensuring smooth adoption and user satisfaction across government departments.',
+        'Collaborated closely with cross-functional technical teams to debug, refine, and optimize production workflows.'
       ],
-      tags: ['TypeScript', 'RxJS', 'Canvas', 'Tailwind', 'Micro-frontends']
+      tags: ['Angular', '.NET', 'Requirements Scoping', 'Client Training', 'SQL', 'Ministry of Health']
     },
     {
-      role: 'Creative Developer & UI Craftsman',
-      company: 'Studio Monochrome',
-      location: 'Amsterdam',
-      period: '2020 — 2022',
-      highlight: 'Crafted award-winning interactive portfolios, editorial websites, and 3D web experiences.',
+      role: 'Customer Service Representative',
+      company: 'Retail Marketing Limited',
+      location: 'Malta',
+      period: 'July 2022 — August 2023',
+      isPromotion: false,
+      highlight: 'Managed and resolved multi-channel customer escalations and improved cross-team support workflows.',
       bullets: [
-        'Delivered 18 bespoke client websites winning multiple Awwwards Site of the Day and FWA recognitions.',
-        'Implemented custom WebGL particle simulations, scroll-linked animations, and tactile micro-interactions.',
-        'Optimized cross-browser performance achieving consistent 99+ Lighthouse scores.'
+        'Managed customer inquiries, complaints, and escalations across face-to-face, phone, and email channels, adhering strictly to service level agreements.',
+        'Collaborated with internal departments to resolve complex issues, document operating procedures, and improve support efficiency.'
       ],
-      tags: ['Creative Coding', 'Three.js', 'Motion', 'WebGL', 'SEO']
+      tags: ['Client Communication', 'Escalation Resolution', 'Team Collaboration', 'Documentation']
+    },
+    {
+      role: 'Junior Software Engineer',
+      company: 'Cocobyte Software Solutions',
+      location: 'India',
+      period: 'August 2020 — May 2022',
+      isPromotion: false,
+      highlight: 'Awarded "Tech Contribution of the Month" (February 2020). Mentored new joiners in mobile engineering.',
+      bullets: [
+        'Developed and maintained scalable cross-platform mobile applications using Flutter and Dart.',
+        'Utilized Visual Studio and Android Studio for runtime debugging, performance profiling, and bug resolution.',
+        'Collaborated with technical leads to gather requirements, write clean modular code, support QA testing, and deliver on-time releases.',
+        'Mentored and onboarded new joiners, accelerating ramp-up times across the engineering cohort.'
+      ],
+      tags: ['Flutter', 'Dart', 'Android Studio', 'Mobile Apps', 'Mentorship', 'Git']
+    },
+    {
+      role: 'Associate Software Engineer',
+      company: 'mStack Innovation Labs',
+      location: 'India',
+      period: 'October 2019 — April 2020',
+      isPromotion: false,
+      highlight: 'Recognized as Quick Learner completing multiple certifications in Bootstrap and Ember.js during training.',
+      bullets: [
+        'Designed and developed reusable UI components and widgets using Ember.js, Bootstrap, and modern JavaScript.',
+        'Managed daily task assignments, sprint tracking via Jira, and version control deployments via GitHub.',
+        'Prioritized individual workloads to ensure timely, high-quality delivery across sprints.'
+      ],
+      tags: ['Ember.js', 'Bootstrap', 'JavaScript', 'Jira', 'GitHub']
     }
   ];
 
-  // Testimonials / Recommendations
-  readonly testimonials = [
+  // Key Achievements
+  readonly achievements = [
     {
-      quote: "Alex has that exceptionally rare dual superpower: pixel-perfect visual artistry coupled with hardcore systems engineering. The UI he builds feels impossibly alive.",
-      author: "Elena Rostova",
-      title: "Head of Product, Aura Labs"
+      title: 'Promoted to Full Stack Developer (2025)',
+      description: 'Recognized for exemplary delivery of health systems at Cursor Limited, Malta, progressing to full-stack engineering lead.',
+      badge: 'Promotion'
     },
     {
-      quote: "Working with Alex was a breath of fresh air. He took our complex telemetry streams and turned them into a blistering, fluid dashboard that our clients adore.",
-      author: "Marcus Chen",
-      title: "VP of Engineering, Veloce"
+      title: 'Best Team Member Award (March 2024)',
+      description: 'Awarded at Cursor Limited for successfully implementing and securing project scope approval for the Malta Ministry of Health.',
+      badge: 'Honor'
     },
     {
-      quote: "One of the most detail-oriented creative developers I've ever collaborated with. Every subtle animation and transition has purpose and weight.",
-      author: "Sarah Lindqvist",
-      title: "Design Director, Studio Monochrome"
+      title: 'Tech Contribution of the Month (February 2020)',
+      description: 'Awarded at Cocobyte Software Solutions for outstanding mobile engineering performance and technical execution.',
+      badge: 'Honor'
+    },
+    {
+      title: 'Engineering Mentorship & Leadership',
+      description: 'Successfully mentored multiple new joiners in frontend and mobile architectures, fostering team cohesion.',
+      badge: 'Leadership'
+    }
+  ];
+
+  // Education & Credentials
+  readonly education = [
+    {
+      degree: 'Bachelor of Technology: Computer Science',
+      institution: 'MQF Level 6 Accredited',
+      period: 'July 2014 — April 2018',
+      description: 'Comprehensive core in Computer Science, Data Structures, Algorithms, Software Engineering, and Database Management Systems.'
+    },
+    {
+      degree: 'Data Science Summer Course',
+      institution: 'University of Malta',
+      period: 'Certified',
+      description: 'Specialized statistical modeling, data visualization, and analytical processing methodologies.'
+    },
+    {
+      degree: 'Technical Certifications',
+      institution: 'Python & PHP/MySQL Certified',
+      period: 'Certified',
+      description: 'Validated backend competencies in Python scripting and relational PHP/MySQL systems.'
     }
   ];
 
   ngOnInit() {
     if (this.isBrowser) {
       this.startRoleTicker();
-      this.initCanvasIfEnabled();
+      this.initCosmicCanvas();
     }
   }
 
@@ -375,7 +468,6 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  // Mouse move listener for ambient spotlight
   @HostListener('window:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isBrowser) return;
@@ -385,11 +477,10 @@ export class App implements OnInit, OnDestroy {
     document.documentElement.style.setProperty('--mouse-y', y);
   }
 
-  // Scroll listener to update active section
   @HostListener('window:scroll')
   onWindowScroll() {
     if (!this.isBrowser) return;
-    const sections = ['hero', 'about', 'work', 'skills', 'experience', 'contact'];
+    const sections = ['hero', 'about', 'experience', 'work', 'skills', 'education', 'contact'];
     const scrollPos = window.scrollY + 200;
 
     for (const sectionId of sections) {
@@ -411,7 +502,7 @@ export class App implements OnInit, OnDestroy {
     }, 3200);
   }
 
-  setTheme(theme: 'cyan' | 'violet' | 'emerald' | 'amber') {
+  setTheme(theme: 'aurora' | 'violet' | 'emerald' | 'amber') {
     this.activeTheme.set(theme);
     if (this.isBrowser) {
       document.documentElement.setAttribute('data-theme', theme);
@@ -449,7 +540,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   copyEmail() {
-    const email = 'alex.vance@studio-craft.io';
+    const email = this.candidate.email;
     if (this.isBrowser && navigator.clipboard) {
       navigator.clipboard.writeText(email).then(() => {
         this.copiedEmail.set(true);
@@ -461,6 +552,16 @@ export class App implements OnInit, OnDestroy {
     } else {
       this.copiedEmail.set(true);
       setTimeout(() => this.copiedEmail.set(false), 2400);
+    }
+  }
+
+  copyPhone() {
+    const phone = this.candidate.phone;
+    if (this.isBrowser && navigator.clipboard) {
+      navigator.clipboard.writeText(phone).then(() => {
+        this.copiedPhone.set(true);
+        setTimeout(() => this.copiedPhone.set(false), 2400);
+      });
     }
   }
 
@@ -485,8 +586,8 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  // Generative Canvas Initialization
-  private initCanvasIfEnabled() {
+  // Creative Aurora Dynamic Canvas
+  private initCosmicCanvas() {
     if (!this.isBrowser) return;
 
     setTimeout(() => {
@@ -504,18 +605,19 @@ export class App implements OnInit, OnDestroy {
         height = canvas.height = window.innerHeight;
       });
 
-      // Ambient dynamic nodes
-      const nodeCount = Math.min(width < 768 ? 25 : 55, 60);
-      const nodes: { x: number; y: number; vx: number; vy: number; radius: number; baseAlpha: number }[] = [];
+      // Shimmering constellation nodes
+      const nodeCount = Math.min(width < 768 ? 30 : 65, 75);
+      const nodes: { x: number; y: number; vx: number; vy: number; radius: number; color: string }[] = [];
+      const colors = ['rgba(56, 189, 248, 0.7)', 'rgba(99, 102, 241, 0.7)', 'rgba(168, 85, 247, 0.7)', 'rgba(52, 211, 153, 0.6)'];
 
       for (let i = 0; i < nodeCount; i++) {
         nodes.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.45,
-          vy: (Math.random() - 0.5) * 0.45,
-          radius: Math.random() * 1.5 + 0.8,
-          baseAlpha: Math.random() * 0.4 + 0.2
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 1.8 + 0.8,
+          color: colors[Math.floor(Math.random() * colors.length)]
         });
       }
 
@@ -530,7 +632,6 @@ export class App implements OnInit, OnDestroy {
       const render = () => {
         ctx.clearRect(0, 0, width, height);
 
-        // Draw connections
         for (let i = 0; i < nodes.length; i++) {
           const a = nodes[i];
           a.x += a.vx;
@@ -539,35 +640,35 @@ export class App implements OnInit, OnDestroy {
           if (a.x < 0 || a.x > width) a.vx *= -1;
           if (a.y < 0 || a.y > height) a.vy *= -1;
 
-          // Mouse subtle attraction
+          // Gentle mouse reaction
           const dxMouse = mouseX - a.x;
           const dyMouse = mouseY - a.y;
           const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < 180) {
-            a.x += (dxMouse / distMouse) * 0.6;
-            a.y += (dyMouse / distMouse) * 0.6;
+          if (distMouse < 200) {
+            a.x += (dxMouse / distMouse) * 0.7;
+            a.y += (dyMouse / distMouse) * 0.7;
           }
 
-          // Draw node
+          // Draw shimmering node
           ctx.beginPath();
           ctx.arc(a.x, a.y, a.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${a.baseAlpha})`;
+          ctx.fillStyle = a.color;
           ctx.fill();
 
-          // Connect nearby nodes
+          // Connect adjacent nodes with radiant lines
           for (let j = i + 1; j < nodes.length; j++) {
             const b = nodes[j];
             const dx = a.x - b.x;
             const dy = a.y - b.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < 130) {
-              const alpha = (1 - dist / 130) * 0.15;
+            if (dist < 140) {
+              const alpha = (1 - dist / 140) * 0.22;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
-              ctx.strokeStyle = `rgba(160, 200, 255, ${alpha})`;
-              ctx.lineWidth = 0.6;
+              ctx.strokeStyle = `rgba(147, 197, 253, ${alpha})`;
+              ctx.lineWidth = 0.75;
               ctx.stroke();
             }
           }
