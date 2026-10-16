@@ -1,0 +1,100 @@
+/* Component-specific animations and fine-tuned styles */
+:host {
+  display: block;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Glassmorphism elements */
+.dock-nav {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+}
+
+/* Custom glow utility */
+.glow-accent {
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.border-accent {
+  border-color: var(--accent-border);
+}
+
+.text-accent {
+  color: var(--accent-primary);
+}
+
+.bg-accent {
+  background-color: var(--accent-primary);
+}
+
+.bg-accent-subtle {
+  background-color: var(--accent-glow);
+}
+
+/* Subtle border transitions */
+.card-hover-border {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease;
+  pointer-events: none;
+}
+
+.card-hover-border:hover::after {
+  border-color: var(--accent-border);
+}
+
+/* Pulse badge animation */
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulseDot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gradient text with dynamic accent */
+.dynamic-gradient-text {
+  background: linear-gradient(135deg, #ffffff 40%, var(--accent-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom modal backdrop animation */
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpModal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-modal-backdrop {
+  animation: fadeInBackdrop 0.2s ease-out forwards;
+}
+
+.animate-modal-content {
+  animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
