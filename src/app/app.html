@@ -60,41 +60,45 @@
 
   <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 pointer-events-none z-10"></div>
 
-  <!-- Middle Rotating Circular Badge & Trigger (Smooth Fade Out when turned) -->
-  <div (click)="toggleHeroTurnAround()"
-       class="relative z-20 flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-700 ease-out"
+  <!-- Middle Rotating Circular Badge & Trigger: Perfectly Centered In The Middle -->
+  <div class="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 transition-all duration-700 ease-out pointer-events-none"
        [class.opacity-100]="!isHeroTurnedAround()"
        [class.opacity-0]="isHeroTurnedAround()"
-       [class.pointer-events-none]="isHeroTurnedAround()"
-       [class.scale-95]="isHeroTurnedAround()"
-       title="Click to meet Swathy!">
-    <div class="relative w-72 h-72 sm:w-88 sm:h-88 flex items-center justify-center animate-breathing group">
-      <svg viewBox="0 0 300 300" class="w-full h-full animate-spin-circular drop-shadow-2xl">
-        <path id="badgeCircle" d="M 150, 150 m -112, 0 a 112,112 0 1,1 224,0 a 112,112 0 1,1 -224,0" fill="transparent" />
-        <text class="font-mild font-bold text-[13px] tracking-[0.24em] fill-white uppercase">
-          <textPath href="#badgeCircle" startOffset="0%">
-            ✦ Welcome to my room · Click me! · Welcome to my room · Click me! ·
-          </textPath>
-        </text>
-      </svg>
+       [class.scale-95]="isHeroTurnedAround()">
+    <div (click)="toggleHeroTurnAround()"
+         class="pointer-events-auto flex flex-col items-center justify-center cursor-pointer group"
+         title="Click to meet Swathy!">
+      <div class="relative w-72 h-72 sm:w-88 sm:h-88 flex items-center justify-center animate-breathing">
+        <svg viewBox="0 0 300 300" class="w-full h-full animate-spin-circular drop-shadow-2xl">
+          <path id="badgeCircle" d="M 150, 150 m -112, 0 a 112,112 0 1,1 224,0 a 112,112 0 1,1 -224,0" fill="transparent" />
+          <text class="font-mild font-bold text-[13px] tracking-[0.24em] fill-white uppercase">
+            <textPath href="#badgeCircle" startOffset="0%">
+              ✦ Welcome to my room · Click me! · Welcome to my room · Click me! ·
+            </textPath>
+          </text>
+        </svg>
 
-      <div class="absolute inset-0 grid place-items-center text-center pointer-events-none">
-        <div class="px-6 py-5 rounded-full bg-black/60 backdrop-blur-md border border-white/25 text-white shadow-2xl transition-transform group-hover:scale-110">
-          <p class="text-xs font-mono text-slate-300">Don't be shy.</p>
-          <p class="text-xs font-mono text-slate-300">Feel free to say</p>
-          <p class="font-mild font-bold text-3xl text-[var(--accent)] mt-0.5">“Hey!” 🤝</p>
+        <div class="absolute inset-0 grid place-items-center text-center pointer-events-none">
+          <div class="px-7 py-6 rounded-full bg-black/65 backdrop-blur-md border border-white/25 text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">
+            <p class="text-xs font-mono text-slate-300">Don't be shy.</p>
+            <p class="text-xs font-mono text-slate-300">Feel free to say</p>
+            <p class="font-mild font-bold text-3xl text-[var(--accent)] mt-0.5 flex items-center justify-center gap-1.5">
+              <span>“Say Hi!”</span>
+              <span class="animate-wave text-2xl">👋</span>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-4 px-5 py-2 rounded-full bg-black/65 backdrop-blur-md border border-white/15 text-white font-mono text-xs flex items-center gap-2.5 shadow-xl">
-      <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
-      Click anywhere to turn around
+      <div class="mt-4 px-5 py-2.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white font-mono text-xs flex items-center gap-2.5 shadow-xl transition-all duration-300 group-hover:border-emerald-400/60 group-hover:scale-105">
+        <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
+        Click anywhere to turn around & say hi
+      </div>
     </div>
   </div>
 
   <!-- State 2: Turned Around Front Card -->
-  <div class="relative z-20 w-full h-full p-4 sm:p-10 md:p-14 flex flex-col justify-end md:justify-center md:items-end transition-all duration-1000 ease-out"
+  <div class="absolute inset-0 z-20 w-full h-full p-4 sm:p-10 md:p-14 flex flex-col justify-end md:justify-center md:items-end transition-all duration-1000 ease-out"
        [class.opacity-100]="isHeroTurnedAround()"
        [class.opacity-0]="!isHeroTurnedAround()"
        [class.pointer-events-none]="!isHeroTurnedAround()"
@@ -104,7 +108,8 @@
       <!-- Card Header: Hey! greeting + Back to desk button -->
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <span class="font-mild font-bold text-3xl sm:text-4xl text-white flex items-center gap-2.5">
-          Hey! <span class="text-2xl animate-bounce">🤝</span>
+          <span>Hey!</span>
+          <span class="text-3xl animate-wave">👋</span>
         </span>
         <button (click)="toggleHeroTurnAround()"
                 class="text-xs font-mono text-slate-200 hover:text-white px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-emerald-500/20 border border-white/20 hover:border-emerald-400/50 cursor-pointer flex items-center gap-1.5 transition-all shadow-sm"
