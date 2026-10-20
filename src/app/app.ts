@@ -53,6 +53,9 @@ export class App implements OnInit, OnDestroy {
   // Theme state: Creative Aurora themes
   activeTheme = signal<'aurora' | 'violet' | 'emerald' | 'amber'>('aurora');
   
+  // Mild Sugar Hero Room Interactive Turn-Around State
+  isHeroTurnedAround = signal<boolean>(false);
+  
   // Navigation & UI state
   activeSection = signal<string>('hero');
   selectedCategory = signal<string>('all');
@@ -62,6 +65,18 @@ export class App implements OnInit, OnDestroy {
   isTerminalOpen = signal<boolean>(false);
   selectedSkill = signal<SkillItem | null>(null);
   activeSkillTab = signal<'frontend' | 'backend-db' | 'cloud-tools' | 'ai-modern'>('frontend');
+
+  // Code preview switcher for Hero section
+  activeCodeSnippet = signal<'angular' | 'dotnet' | 'sql'>('angular');
+
+  // Interactive CLI drawer state
+  terminalInput = signal<string>('');
+  terminalHistory = signal<{ command: string; output: string }[]>([
+    { command: 'whoami', output: 'Swathy Krishna — Senior Full Stack Developer (.NET & Angular) based in Malta.' },
+    { command: 'promotion', output: '★ 2025: Promoted to Full Stack Developer @ Cursor Limited, Malta.' },
+    { command: 'specialization', output: 'High-reliability enterprise government systems for the Malta Ministry of Health.' },
+    { command: 'type "help"', output: 'Available: help, skills, projects, contact, awards, clear' }
+  ]);
 
   // Contact form state
   contactName = signal<string>('');
@@ -73,7 +88,7 @@ export class App implements OnInit, OnDestroy {
   // Candidate Details
   readonly candidate = {
     name: 'Swathy Krishna',
-    title: 'Senior Full Stack Developer',
+    title: 'Full Stack Developer',
     specialization: 'Angular • .NET Core • Azure DevOps • SQL Server',
     location: 'Birkirkara, Malta',
     phone: '+356 77925861',
@@ -83,9 +98,9 @@ export class App implements OnInit, OnDestroy {
     summary: 'Results-driven IT professional with 5+ years of experience engineering high-impact full-stack and frontend systems. Specializing in government-grade applications for the Malta Ministry of Health using Angular and .NET. Promoted from System Implementation Specialist (2023) to Full Stack Developer (2025) at Cursor Limited, Malta.'
   };
 
-  // Rotating roles ticker for Senior Full Stack post
+  // Rotating roles ticker for Full Stack post
   readonly roles = [
-    'Senior Full Stack Developer',
+    'Full Stack Developer',
     'Angular & .NET Core Specialist',
     'Government Systems Architect',
     'Azure Cloud & SQL Server Engineer',
@@ -239,6 +254,52 @@ export class App implements OnInit, OnDestroy {
     if (cat === 'all') return this.projects();
     return this.projects().filter(p => p.category === cat);
   });
+
+  // Flagship Selected Works (Curated Enterprise Systems)
+  selectedWorks = computed(() => this.projects().filter(p => p.featured));
+
+  // Related Works (Secondary Systems, UI Libraries & Analytics)
+  relatedWorks = computed(() => this.projects().filter(p => !p.featured));
+
+  // Pushing Boundaries Pillars (Engineering Philosophy & Benchmarks)
+  readonly boundaryPillars = [
+    {
+      number: '01',
+      title: 'Sub-Second Database Telemetry',
+      metric: '45% Faster',
+      metricLabel: 'Query Latency Reduction',
+      tagline: 'Enterprise T-SQL performance tuning for national healthcare records.',
+      description: 'Pushing beyond typical ORM defaults by architecting custom clustered indexes, execution plan profiling, and partitioned tables in Microsoft SQL Server to serve millions of sensitive patient events instantaneously.',
+      technologies: ['MS SQL Server', 'T-SQL Optimization', 'Index Tuning', 'ETL Pipelines']
+    },
+    {
+      number: '02',
+      title: 'Zero-Downtime System Resilience',
+      metric: '99.98%',
+      metricLabel: 'Production Availability',
+      tagline: 'Fault-tolerant distributed microservices engineered with Polly.',
+      description: 'Ensuring critical medical workflows never drop a transaction during network degradation through circuit-breaker policies, exponential backoff retries, and automated Azure DevOps release gates.',
+      technologies: ['.NET Core 9', 'Polly Resilience', 'REST APIs', 'Azure DevOps']
+    },
+    {
+      number: '03',
+      title: 'AI-Augmented Engineering Speed',
+      metric: '+35%',
+      metricLabel: 'Feature Delivery Velocity',
+      tagline: 'Integrating next-gen developer intelligence into daily enterprise SDLC.',
+      description: 'Maximizing delivery velocity and test coverage using Cursor, GitHub Copilot, and LLM-assisted scaffolding for Angular reactive components, automated regression harnesses, and C# controller boilerplate.',
+      technologies: ['Cursor', 'GitHub Copilot', 'Prompt Engineering', 'CI/CD Automation']
+    },
+    {
+      number: '04',
+      title: 'Human-Centered Clinical Accessibility',
+      metric: 'WCAG 2.1 AA',
+      metricLabel: 'Accessibility Standard',
+      tagline: 'Intuitive UX engineered for doctors, nurses, and administrative staff.',
+      description: 'Bridging technical complexity with intuitive interfaces that eliminate cognitive friction for healthcare staff. Tested with live hospital stakeholders during rollout in Malta.',
+      technologies: ['Angular 21', 'Reactive Forms', 'Design Systems', 'Figma Prototyping']
+    }
+  ];
 
   // Comprehensive Skills Matrix from PDF
   readonly skills = signal<SkillItem[]>([
@@ -480,7 +541,7 @@ export class App implements OnInit, OnDestroy {
   @HostListener('window:scroll')
   onWindowScroll() {
     if (!this.isBrowser) return;
-    const sections = ['hero', 'about', 'experience', 'work', 'skills', 'education', 'contact'];
+    const sections = ['hero', 'manifesto', 'process', 'selected-works', 'pushing-boundaries', 'contact'];
     const scrollPos = window.scrollY + 200;
 
     for (const sectionId of sections) {
@@ -507,6 +568,10 @@ export class App implements OnInit, OnDestroy {
     if (this.isBrowser) {
       document.documentElement.setAttribute('data-theme', theme);
     }
+  }
+
+  toggleHeroTurnAround() {
+    this.isHeroTurnedAround.update(v => !v);
   }
 
   setCategory(cat: string) {
@@ -537,6 +602,55 @@ export class App implements OnInit, OnDestroy {
 
   toggleTerminal() {
     this.isTerminalOpen.update(v => !v);
+  }
+
+  runTerminalCommand(rawCmd: string) {
+    const cmd = rawCmd.trim().toLowerCase();
+    if (!cmd) return;
+
+    let output = '';
+    if (cmd === 'help') {
+      output = 'Commands: whoami, skills, projects, experience, contact, hire, theme [aurora|violet|emerald|amber], clear';
+    } else if (cmd === 'whoami' || cmd === 'bio') {
+      output = `${this.candidate.name} — ${this.candidate.title} based in ${this.candidate.location}. ${this.candidate.experienceYears} experience specializing in Angular, .NET Core, SQL Server & Azure DevOps.`;
+    } else if (cmd === 'promotion' || cmd === 'promotions') {
+      output = '★ 2025: Promoted to Full Stack Developer at Cursor Limited, Malta after successful government project scoping and delivery.';
+    } else if (cmd === 'skills') {
+      output = 'Core: Angular 14-21, TypeScript, .NET Core, C#, MS SQL Server, Azure DevOps, Flutter, REST APIs, Power BI, AI Developer Tooling (Cursor, Copilot).';
+    } else if (cmd === 'projects') {
+      output = '1. Malta Ministry of Health Enterprise Portal | 2. Healthcare Sync & Integration Engine (.NET API) | 3. CarePulse Mobile Telehealth App | 4. Ministry Health Power BI Dashboard.';
+    } else if (cmd === 'experience') {
+      output = '• 2025-Present: Full Stack Developer @ Cursor Limited, Malta\n• 2023-2025: System Implementation Specialist @ Cursor Limited\n• 2020-2022: Junior Software Engineer @ Cocobyte Software Solutions';
+    } else if (cmd === 'contact' || cmd === 'hire') {
+      output = `Email: ${this.candidate.email} | Phone: ${this.candidate.phone} | LinkedIn: ${this.candidate.linkedin}`;
+    } else if (cmd === 'awards') {
+      output = '★ Best Team Member (March 2024, Cursor Ltd) | ★ Tech Contribution of the Month (Feb 2020, Cocobyte)';
+    } else if (cmd.startsWith('theme ')) {
+      const themeName = cmd.split(' ')[1] as any;
+      if (['aurora', 'violet', 'emerald', 'amber'].includes(themeName)) {
+        this.setTheme(themeName);
+        output = `Theme switched to "${themeName}".`;
+      } else {
+        output = 'Invalid theme. Choose: aurora, violet, emerald, amber';
+      }
+    } else if (cmd === 'clear') {
+      this.terminalHistory.set([]);
+      this.terminalInput.set('');
+      return;
+    } else {
+      output = `Command not recognized: "${rawCmd}". Type "help" to see available commands.`;
+    }
+
+    this.terminalHistory.update(h => [...h, { command: rawCmd, output }]);
+    this.terminalInput.set('');
+  }
+
+  onTerminalSubmit(e: Event) {
+    e.preventDefault();
+    const val = this.terminalInput();
+    if (val) {
+      this.runTerminalCommand(val);
+    }
   }
 
   copyEmail() {

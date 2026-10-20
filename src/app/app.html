@@ -1,941 +1,729 @@
-<!-- Creative Aurora Background Elements (Non-Black Cosmic Palette) -->
-<div class="fixed inset-0 ambient-grid pointer-events-none z-0 opacity-50"></div>
-<div class="aurora-orb-1"></div>
-<div class="aurora-orb-2"></div>
-<div class="aurora-orb-3"></div>
-<canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
-<div class="fixed inset-0 mouse-spotlight pointer-events-none z-0"></div>
-
-<!-- Floating Notification Toasts -->
+<!-- Toast Notifications -->
 @if (copiedEmail()) {
-  <div class="fixed bottom-24 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/90 border border-emerald-400/50 text-emerald-300 shadow-2xl backdrop-blur-xl animate-bounce">
-    <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-    </svg>
-    <span class="text-xs font-mono tracking-wide">Email copied: krishnaswathy9396&#64;gmail.com</span>
+  <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] card-glass px-6 py-3.5 text-sm font-semibold text-emerald-400 border-emerald-500/40 shadow-2xl flex items-center gap-3 rise">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+    ✓ Email copied: <span class="text-white font-mono">{{ candidate.email }}</span>
   </div>
 }
-
 @if (copiedPhone()) {
-  <div class="fixed bottom-24 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/90 border border-cyan-400/50 text-cyan-300 shadow-2xl backdrop-blur-xl animate-bounce">
-    <svg class="w-5 h-5 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-    </svg>
-    <span class="text-xs font-mono tracking-wide">Phone copied: +356 77925861</span>
+  <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] card-glass px-6 py-3.5 text-sm font-semibold text-amber-400 border-amber-500/40 shadow-2xl flex items-center gap-3 rise">
+    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+    ✓ Phone copied: <span class="text-white font-mono">{{ candidate.phone }}</span>
   </div>
 }
 
-<div class="relative z-10 flex flex-col min-h-screen">
-
-  <!-- Top Sticky Navigation Bar -->
-  <header class="sticky top-0 z-40 px-4 sm:px-8 py-4 backdrop-blur-xl bg-[#0a0e1c]/80 border-b border-indigo-500/10 shadow-lg transition-all">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      
-      <!-- Brand & Name -->
-      <a (click)="scrollTo('hero')" class="cursor-pointer flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
-          <div class="w-full h-full rounded-[11px] bg-[#0c1224] flex items-center justify-center font-mono text-xs font-extrabold text-cyan-300 group-hover:text-white transition-colors">
-            SK
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-sm font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors">
-            {{ candidate.name }}
-          </span>
-          <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-wider">
-            Senior Full Stack Dev &bull; Malta
-          </span>
-        </div>
-      </a>
-
-      <!-- Desktop Nav Menu -->
-      <nav class="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-900/80 border border-indigo-500/20 text-xs font-medium text-slate-300 shadow-inner">
-        <button (click)="scrollTo('about')" [class.text-cyan-300]="activeSection() === 'about'" class="px-3 py-1.5 rounded-full hover:text-white transition-colors cursor-pointer">
-          About
-        </button>
-        <button (click)="scrollTo('experience')" [class.text-cyan-300]="activeSection() === 'experience'" class="px-3 py-1.5 rounded-full hover:text-white transition-colors cursor-pointer">
-          Experience
-        </button>
-        <button (click)="scrollTo('work')" [class.text-cyan-300]="activeSection() === 'work'" class="px-3 py-1.5 rounded-full hover:text-white transition-colors cursor-pointer">
-          Projects
-        </button>
-        <button (click)="scrollTo('skills')" [class.text-cyan-300]="activeSection() === 'skills'" class="px-3 py-1.5 rounded-full hover:text-white transition-colors cursor-pointer">
-          Skills & Stack
-        </button>
-        <button (click)="scrollTo('education')" [class.text-cyan-300]="activeSection() === 'education'" class="px-3 py-1.5 rounded-full hover:text-white transition-colors cursor-pointer">
-          Credentials
-        </button>
-        <button (click)="scrollTo('contact')" [class.text-cyan-300]="activeSection() === 'contact'" class="px-3 py-1.5 rounded-full hover:text-white transition-colors cursor-pointer">
-          Contact
-        </button>
-      </nav>
-
-      <!-- Right Action Controls -->
-      <div class="flex items-center gap-3">
-        <!-- Palette Switcher -->
-        <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-900/90 border border-indigo-500/20">
-          <button (click)="setTheme('aurora')" title="Cosmic Aurora" [class.ring-2]="activeTheme() === 'aurora'" class="w-3.5 h-3.5 rounded-full bg-cyan-400 ring-cyan-400/50 transition-transform cursor-pointer"></button>
-          <button (click)="setTheme('violet')" title="Cyber Violet" [class.ring-2]="activeTheme() === 'violet'" class="w-3.5 h-3.5 rounded-full bg-purple-500 ring-purple-500/50 transition-transform cursor-pointer"></button>
-          <button (click)="setTheme('emerald')" title="Emerald Wave" [class.ring-2]="activeTheme() === 'emerald'" class="w-3.5 h-3.5 rounded-full bg-emerald-400 ring-emerald-400/50 transition-transform cursor-pointer"></button>
-          <button (click)="setTheme('amber')" title="Sunset Amber" [class.ring-2]="activeTheme() === 'amber'" class="w-3.5 h-3.5 rounded-full bg-amber-400 ring-amber-400/50 transition-transform cursor-pointer"></button>
-        </div>
-
-        <!-- Terminal Quick Trigger -->
-        <button 
-          (click)="toggleTerminal()"
-          title="Developer Console"
-          class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-indigo-500/20 text-xs font-mono text-cyan-300 transition-colors cursor-pointer">
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span>CLI</span>
-        </button>
-
-        <!-- Availability Badge -->
-        <button 
-          (click)="scrollTo('contact')"
-          class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 hover:from-emerald-500/30 hover:to-cyan-500/30 border border-emerald-400/30 text-xs font-medium text-emerald-200 transition-all shadow-md cursor-pointer">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-          </span>
-          <span class="hidden sm:inline">Seeking Senior Roles</span>
-          <span class="sm:hidden">Hire</span>
-        </button>
-      </div>
-
+<!-- Fixed Side Navigation Dots Tracker -->
+<aside class="mild-side-nav hidden md:flex select-none">
+  <div class="flex flex-col items-end gap-2 bg-black/40 backdrop-blur-md px-4 py-3.5 rounded-2xl border border-white/10 shadow-xl">
+    <div (click)="scrollTo('hero')" class="mild-side-link" [class.active]="activeSection() === 'hero'">
+      <span>Workstation</span>
+      <span class="mild-side-dot"></span>
     </div>
-  </header>
+    <div (click)="scrollTo('manifesto')" class="mild-side-link" [class.active]="activeSection() === 'manifesto'">
+      <span>Focus</span>
+      <span class="mild-side-dot"></span>
+    </div>
+    <div (click)="scrollTo('process')" class="mild-side-link" [class.active]="activeSection() === 'process'">
+      <span>Process</span>
+      <span class="mild-side-dot"></span>
+    </div>
+    <div (click)="scrollTo('selected-works')" class="mild-side-link" [class.active]="activeSection() === 'selected-works'">
+      <span>Selected Works</span>
+      <span class="mild-side-dot"></span>
+    </div>
+    <div (click)="scrollTo('pushing-boundaries')" class="mild-side-link" [class.active]="activeSection() === 'pushing-boundaries'">
+      <span>Who Am I</span>
+      <span class="mild-side-dot"></span>
+    </div>
+    <div (click)="scrollTo('contact')" class="mild-side-link" [class.active]="activeSection() === 'contact'">
+      <span>Contact</span>
+      <span class="mild-side-dot"></span>
+    </div>
+  </div>
+</aside>
 
-  <!-- Hero Section -->
-  <section id="hero" class="relative pt-16 pb-20 md:pt-28 md:pb-32 px-4 sm:px-8 max-w-6xl mx-auto w-full">
-    <div class="flex flex-col items-start gap-8">
-      
-      <!-- Promotion & Status Callout Badge -->
-      <div class="badge-promotion inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full text-xs font-mono text-emerald-300 backdrop-blur-md">
-        <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
-        <span class="font-bold tracking-wider">PROMOTED IN 2025: FULL STACK DEVELOPER</span>
-        <span class="text-emerald-500/60 hidden sm:inline">&bull;</span>
-        <span class="text-slate-300 hidden sm:inline">CURSOR LIMITED, MALTA (SINCE 2023)</span>
+<!-- FULL SCREEN WORKSTATION HERO (MILD SUGAR 100VH EDGE-TO-EDGE) -->
+<section id="hero" class="hero-scene relative w-full h-screen min-h-[100vh] overflow-hidden flex items-center justify-center select-none bg-[#0a0d16]">
+  <!-- State 1: Room Back (Coding at Desk) with Slow 3D Rotation -->
+  <div class="hero-rotate-layer"
+       [class.hero-back-facing]="!isHeroTurnedAround()"
+       [class.hero-back-turned]="isHeroTurnedAround()"
+       style="background-image: url('/room-back.jpg')">
+  </div>
+
+  <!-- State 2: Room Front (Turned Around Facing User) with Slow 3D Rotation -->
+  <div class="hero-rotate-layer"
+       [class.hero-front-facing]="isHeroTurnedAround()"
+       [class.hero-front-turned]="!isHeroTurnedAround()"
+       style="background-image: url('/room-front.jpg')">
+  </div>
+
+  <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 pointer-events-none z-10"></div>
+
+  <!-- Middle Rotating Circular Badge & Trigger (Smooth Fade Out when turned) -->
+  <div (click)="toggleHeroTurnAround()"
+       class="relative z-20 flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-700 ease-out"
+       [class.opacity-100]="!isHeroTurnedAround()"
+       [class.opacity-0]="isHeroTurnedAround()"
+       [class.pointer-events-none]="isHeroTurnedAround()"
+       [class.scale-95]="isHeroTurnedAround()"
+       title="Click to meet Swathy!">
+    <div class="relative w-72 h-72 sm:w-88 sm:h-88 flex items-center justify-center animate-breathing group">
+      <svg viewBox="0 0 300 300" class="w-full h-full animate-spin-circular drop-shadow-2xl">
+        <path id="badgeCircle" d="M 150, 150 m -112, 0 a 112,112 0 1,1 224,0 a 112,112 0 1,1 -224,0" fill="transparent" />
+        <text class="font-mild font-bold text-[13px] tracking-[0.24em] fill-white uppercase">
+          <textPath href="#badgeCircle" startOffset="0%">
+            ✦ Welcome to my room · Click me! · Welcome to my room · Click me! ·
+          </textPath>
+        </text>
+      </svg>
+
+      <div class="absolute inset-0 grid place-items-center text-center pointer-events-none">
+        <div class="px-6 py-5 rounded-full bg-black/60 backdrop-blur-md border border-white/25 text-white shadow-2xl transition-transform group-hover:scale-110">
+          <p class="text-xs font-mono text-slate-300">Don't be shy.</p>
+          <p class="text-xs font-mono text-slate-300">Feel free to say</p>
+          <p class="font-mild font-bold text-3xl text-[var(--accent)] mt-0.5">“Hey!” 🤝</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 px-5 py-2 rounded-full bg-black/65 backdrop-blur-md border border-white/15 text-white font-mono text-xs flex items-center gap-2.5 shadow-xl">
+      <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
+      Click anywhere to turn around
+    </div>
+  </div>
+
+  <!-- State 2: Turned Around Front Card -->
+  <div class="relative z-20 w-full h-full p-4 sm:p-10 md:p-14 flex flex-col justify-end md:justify-center md:items-end transition-all duration-1000 ease-out"
+       [class.opacity-100]="isHeroTurnedAround()"
+       [class.opacity-0]="!isHeroTurnedAround()"
+       [class.pointer-events-none]="!isHeroTurnedAround()"
+       [class.translate-x-0]="isHeroTurnedAround()"
+       [class.translate-x-10]="!isHeroTurnedAround()">
+    <div class="card-glass w-full max-w-lg p-6 sm:p-8 border-white/20 shadow-2xl space-y-4" style="background: rgba(10, 13, 22, 0.94)">
+      <!-- Card Header: Hey! greeting + Back to desk button -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <span class="font-mild font-bold text-3xl sm:text-4xl text-white flex items-center gap-2.5">
+          Hey! <span class="text-2xl animate-bounce">🤝</span>
+        </span>
+        <button (click)="toggleHeroTurnAround()"
+                class="text-xs font-mono text-slate-200 hover:text-white px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-emerald-500/20 border border-white/20 hover:border-emerald-400/50 cursor-pointer flex items-center gap-1.5 transition-all shadow-sm"
+                title="Return to workstation desk">
+          <span>Back to desk</span>
+          <span class="text-emerald-400 font-bold">↺</span>
+        </button>
       </div>
 
-      <!-- Main Headline -->
-      <div class="max-w-4xl space-y-4">
-        <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-[1.1] font-heading">
-          Engineering <span class="text-gradient">resilient enterprise systems</span> & modern healthcare web architectures.
+      <!-- Candidate Name & Designation -->
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Full Stack Developer
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-mild font-bold text-white tracking-tight">
+          Swathy Krishna
         </h1>
-        
-        <!-- Rotating Role Ticker -->
-        <div class="h-10 flex items-center gap-3 text-lg sm:text-2xl font-mono text-cyan-300">
-          <span class="text-indigo-400">&gt;</span>
-          <span class="text-white border-b-2 border-cyan-400 pb-0.5 transition-all duration-300">
-            {{ roles[currentRoleIndex()] }}
+      </div>
+
+      <!-- Current Company & Role Details -->
+      <div class="rounded-xl bg-white/[0.04] border border-white/10 p-3.5 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 grid place-items-center flex-shrink-0 text-base font-bold shadow-sm">
+          🏢
+        </div>
+        <div class="text-xs leading-relaxed">
+          <div class="flex items-center gap-2">
+            <span class="text-white font-semibold text-sm">Cursor Limited</span>
+            <span class="text-emerald-400 font-mono text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">★ Promoted 2025</span>
+          </div>
+          <div class="text-slate-300 mt-1">
+            Birkirkara, Malta · Engineering government-grade health systems for the <span class="text-white font-semibold">Malta Ministry of Health</span>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Provision Languages & Tech Stack -->
+      <div class="space-y-2">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
+          <span>⚡ Provision Languages & Stack</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            Angular 21
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            .NET Core 9 / C#
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            Microsoft SQL Server
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            TypeScript & JS
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            Azure DevOps
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            Flutter & Dart
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-white font-mono text-xs font-medium hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-colors">
+            RESTful APIs
           </span>
         </div>
       </div>
 
-      <!-- Professional Summary from CV -->
-      <p class="max-w-3xl text-base sm:text-lg text-slate-300 leading-relaxed font-light">
-        Results-driven IT professional with <strong>5+ years of experience</strong> engineering robust full-stack applications. Specializing in government-grade healthcare systems for the <strong>Malta Ministry of Health</strong> using <strong>Angular</strong>, <strong>.NET Core</strong>, <strong>Microsoft SQL Server</strong>, and <strong>Azure DevOps</strong>.
-      </p>
-
-      <!-- Primary Action Buttons -->
-      <div class="flex flex-wrap items-center gap-4 pt-2">
-        <button 
-          (click)="scrollTo('experience')"
-          class="flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 cursor-pointer">
-          <span>View Career & Promotion Timeline</span>
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+      <!-- Action Buttons -->
+      <div class="pt-2 flex flex-wrap items-center gap-3">
+        <button (click)="scrollTo('manifesto')" class="btn btn-accent !py-2.5 !px-5 font-bold text-sm flex items-center gap-2">
+          <span>Get to know me</span>
+          <span>↗</span>
         </button>
-
-        <a 
-          [href]="candidate.linkedin" 
-          target="_blank"
-          class="flex items-center gap-2 px-5 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-indigo-500/30 text-sm font-semibold text-slate-200 hover:text-white transition-all cursor-pointer">
-          <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-          </svg>
-          <span>LinkedIn Profile ↗</span>
+        <button (click)="scrollTo('selected-works')" class="btn hover:border-emerald-400 !py-2.5 !px-4 text-sm flex items-center gap-1.5">
+          <span>Selected Works</span>
+          <span class="text-xs font-mono text-slate-400">02</span>
+        </button>
+        <a [href]="candidate.linkedin" target="_blank" class="btn text-xs font-mono !py-2.5 !px-4 hover:border-emerald-400">
+          LinkedIn ↗
         </a>
-
-        <button 
-          (click)="copyEmail()"
-          class="flex items-center gap-2 px-5 py-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/90 border border-slate-700/60 text-sm font-medium text-slate-300 hover:text-white transition-all cursor-pointer">
-          <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-          <span>Copy Email</span>
-        </button>
-
-        <button 
-          (click)="scrollTo('contact')"
-          class="flex items-center gap-2 px-4 py-3.5 rounded-xl text-sm font-medium text-cyan-300 hover:text-white transition-colors cursor-pointer">
-          <span>Get in Touch ↗</span>
-        </button>
       </div>
-
-      <!-- Quick Metrics Strip -->
-      <div class="w-full pt-10 border-t border-indigo-500/20 grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="glass-panel p-4 rounded-xl border border-indigo-500/20">
-          <div class="text-3xl font-bold font-heading text-white">5+ Years</div>
-          <div class="text-xs font-mono text-cyan-300 mt-1 uppercase tracking-wider">Professional IT Experience</div>
-        </div>
-        <div class="glass-panel p-4 rounded-xl border border-indigo-500/20">
-          <div class="text-3xl font-bold font-heading text-emerald-400">Malta Gov</div>
-          <div class="text-xs font-mono text-slate-300 mt-1 uppercase tracking-wider">Ministry of Health Systems</div>
-        </div>
-        <div class="glass-panel p-4 rounded-xl border border-indigo-500/20">
-          <div class="text-3xl font-bold font-heading text-cyan-400">Angular & .NET</div>
-          <div class="text-xs font-mono text-slate-300 mt-1 uppercase tracking-wider">Full Stack Core Architecture</div>
-        </div>
-        <div class="glass-panel p-4 rounded-xl border border-indigo-500/20">
-          <div class="text-3xl font-bold font-heading text-amber-300">Awarded</div>
-          <div class="text-xs font-mono text-slate-300 mt-1 uppercase tracking-wider">Best Team Member (Mar 2024)</div>
-        </div>
-      </div>
-
     </div>
-  </section>
+  </div>
 
-  <!-- Work Experience & Promotion Section (Featured Prominently) -->
-  <section id="experience" class="py-20 px-4 sm:px-8 max-w-6xl mx-auto w-full border-t border-indigo-500/10">
-    <div class="space-y-12">
+  <!-- Bottom Scroll Cue -->
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center gap-1 text-slate-400 font-mono text-[11px] animate-bounce">
+    <span>scroll to explore</span>
+    <span>↓</span>
+  </div>
+</section>
+
+<!-- MAIN CONTENT (EXACT SCREENSHOT DESIGN SECTIONS) -->
+<main class="relative z-10 pt-28 px-4 sm:px-8 max-w-7xl mx-auto space-y-40 pb-36">
+
+  <!-- ============================================================== -->
+  <!-- SECTION 01: MANIFESTO & FLOATING PILLS (SCREENSHOT 1) -->
+  <!-- ============================================================== -->
+  <section id="manifesto" class="relative py-16 sm:py-24 select-none">
+    <div class="text-center mb-8">
+      <p class="font-serif-italic text-3xl sm:text-4xl text-white">Hallo!</p>
+    </div>
+
+    <!-- 3-Column Layout: Left Pills - Center Headline - Right Pills -->
+    <div class="relative flex flex-col lg:flex-row items-center justify-between gap-8 max-w-6xl mx-auto">
       
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ 01. CAREER MILESTONES & PROMOTION ]</span>
-          <h2 class="text-3xl sm:text-5xl font-bold font-heading text-white mt-2">
-            Work Experience.
-          </h2>
-          <p class="text-sm text-slate-300 mt-1">
-            Proven progression from System Implementation Specialist to Full Stack Developer delivering government-scale healthcare software in Malta.
-          </p>
+      <!-- Left Staggered Pills (Screenshot 1) -->
+      <div class="hidden lg:flex flex-col gap-6 items-end w-64 shrink-0">
+        <!-- Orange: Product Design -->
+        <div class="screenshot-pill transform -translate-x-3">
+          <span class="pill-icon bg-[#f97316]">⚡</span>
+          <span>Product Design</span>
         </div>
-
-        <div class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-400/40 text-xs font-mono text-emerald-300">
-          Location: Birkirkara, Malta &bull; Hybrid / On-Site / Remote
+        <!-- Blue: UX Design -->
+        <div class="screenshot-pill transform translate-x-2">
+          <span class="pill-icon bg-[#0ea5e9]">⚡</span>
+          <span>UX Design</span>
+        </div>
+        <!-- Dark: User Research -->
+        <div class="screenshot-pill transform -translate-x-1">
+          <span class="pill-icon bg-white/20">⚡</span>
+          <span>User Research</span>
         </div>
       </div>
 
-      <!-- Experience Timeline Cards -->
-      <div class="relative pl-6 sm:pl-8 border-l-2 border-indigo-500/30 space-y-12">
-        @for (exp of experiences; track exp.role + exp.company) {
-          <div class="relative group">
-            
-            <!-- Timeline Glowing Indicator -->
-            <div 
-              [class.bg-emerald-400]="exp.isPromotion"
-              [class.bg-cyan-400]="!exp.isPromotion"
-              class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full border-4 border-[#0a0e1c] group-hover:scale-125 transition-transform shadow-lg shadow-cyan-500/40"></div>
-
-            <div 
-              [class.border-emerald-500/40]="exp.isPromotion"
-              [class.shadow-emerald-500/10]="exp.isPromotion"
-              class="glass-panel p-6 sm:p-8 rounded-2xl border border-indigo-500/20 space-y-5 transition-all">
-              
-              <!-- Card Header -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div class="flex flex-wrap items-center gap-2.5">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white font-heading">
-                      {{ exp.role }}
-                    </h3>
-                    @if (exp.isPromotion) {
-                      <span class="px-3 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-[11px] font-mono font-bold text-emerald-300 uppercase tracking-wide">
-                        ★ Promoted in 2025
-                      </span>
-                    }
-                  </div>
-                  <div class="text-sm font-semibold text-cyan-300 mt-1">
-                    {{ exp.company }} &bull; <span class="text-slate-400 font-mono text-xs">{{ exp.location }}</span>
-                  </div>
-                </div>
-
-                <div class="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-indigo-500/30 font-mono text-xs font-bold text-cyan-200 w-fit">
-                  {{ exp.period }}
-                </div>
-              </div>
-
-              <!-- Key Highlight -->
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-indigo-500/20 text-sm text-cyan-100 font-medium flex items-center gap-2.5">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span>{{ exp.highlight }}</span>
-              </div>
-
-              <!-- Bullets List -->
-              <ul class="space-y-2.5 text-sm text-slate-300 list-disc list-inside leading-relaxed">
-                @for (bullet of exp.bullets; track bullet) {
-                  <li>{{ bullet }}</li>
-                }
-              </ul>
-
-              <!-- Skills & Stack Pills -->
-              <div class="flex flex-wrap gap-2 pt-3 border-t border-indigo-500/15">
-                @for (tag of exp.tags; track tag) {
-                  <span class="px-2.5 py-1 rounded-lg bg-slate-900/80 border border-indigo-500/25 text-xs font-mono text-cyan-300">
-                    {{ tag }}
-                  </span>
-                }
-              </div>
-
-            </div>
-
-          </div>
-        }
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Key Achievements & Honors -->
-  <section class="py-16 px-4 sm:px-8 max-w-6xl mx-auto w-full border-t border-indigo-500/10">
-    <div class="space-y-8">
-      <div>
-        <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ 02. RECOGNITIONS ]</span>
-        <h2 class="text-3xl font-bold font-heading text-white mt-1">
-          Honors & Leadership Milestones.
+      <!-- Center Manifesto Headline -->
+      <div class="max-w-2xl text-center px-2 sm:px-6">
+        <h2 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-normal text-white leading-[1.3] tracking-tight">
+          focus is on blending clear strategy, thoughtful design, and user empathy to <span class="text-slate-400">craft experiences that solve real problems</span>
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        @for (ach of achievements; track ach.title) {
-          <div class="glass-panel glass-panel-hover p-6 rounded-2xl border border-indigo-500/20 flex flex-col justify-between space-y-4">
-            <div class="space-y-2">
-              <span class="px-2.5 py-1 rounded-md bg-cyan-500/15 border border-cyan-400/30 text-[10px] font-mono text-cyan-300 uppercase tracking-wider">
-                {{ ach.badge }}
-              </span>
-              <h3 class="text-base font-bold text-white font-heading mt-2">
-                {{ ach.title }}
-              </h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                {{ ach.description }}
-              </p>
-            </div>
-            <div class="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 pt-2 border-t border-indigo-500/15">
-              <span>Verified Credential</span>
-              <span>✓</span>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- Selected Works & Solutions Showcase -->
-  <section id="work" class="py-20 px-4 sm:px-8 max-w-6xl mx-auto w-full border-t border-indigo-500/10">
-    <div class="space-y-10">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ 03. ENTERPRISE DELIVERABLES ]</span>
-          <h2 class="text-3xl sm:text-5xl font-bold font-heading text-white mt-2">
-            Featured Systems & Projects.
-          </h2>
-          <p class="text-sm text-slate-300 mt-1">
-            Production healthcare platforms, .NET Core microservices, cross-platform mobile apps, and analytics portals.
-          </p>
+      <!-- Right Staggered Pills (Screenshot 1) -->
+      <div class="hidden lg:flex flex-col gap-6 items-start w-64 shrink-0">
+        <!-- Yellow: Design Systems -->
+        <div class="screenshot-pill transform translate-x-3">
+          <span class="pill-icon bg-[#eab308]">⚡</span>
+          <span>Design Systems</span>
         </div>
-
-        <!-- Filter Controls -->
-        <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-xl bg-slate-900/90 border border-indigo-500/20 text-xs">
-          <button 
-            (click)="setCategory('all')"
-            [class.bg-cyan-400]="selectedCategory() === 'all'"
-            [class.text-slate-950]="selectedCategory() === 'all'"
-            [class.text-slate-300]="selectedCategory() !== 'all'"
-            class="px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            All ({{ projects().length }})
-          </button>
-          <button 
-            (click)="setCategory('enterprise-health')"
-            [class.bg-cyan-400]="selectedCategory() === 'enterprise-health'"
-            [class.text-slate-950]="selectedCategory() === 'enterprise-health'"
-            [class.text-slate-300]="selectedCategory() !== 'enterprise-health'"
-            class="px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            Health Systems
-          </button>
-          <button 
-            (click)="setCategory('fullstack-dotnet')"
-            [class.bg-cyan-400]="selectedCategory() === 'fullstack-dotnet'"
-            [class.text-slate-950]="selectedCategory() === 'fullstack-dotnet'"
-            [class.text-slate-300]="selectedCategory() !== 'fullstack-dotnet'"
-            class="px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            Angular & .NET
-          </button>
-          <button 
-            (click)="setCategory('mobile-cloud')"
-            [class.bg-cyan-400]="selectedCategory() === 'mobile-cloud'"
-            [class.text-slate-950]="selectedCategory() === 'mobile-cloud'"
-            [class.text-slate-300]="selectedCategory() !== 'mobile-cloud'"
-            class="px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            Mobile & Cloud
-          </button>
+        <!-- Pink: Usability Testing -->
+        <div class="screenshot-pill transform -translate-x-2">
+          <span class="pill-icon bg-[#ec4899]">⚡</span>
+          <span>Usability Testing</span>
+        </div>
+        <!-- Green: Brand Identity -->
+        <div class="screenshot-pill transform translate-x-1">
+          <span class="pill-icon bg-[#22c55e]">⚡</span>
+          <span>Brand Identity</span>
         </div>
       </div>
 
-      <!-- Projects Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        @for (project of filteredProjects(); track project.id) {
-          <article 
-            (click)="openProjectModal(project)"
-            class="group cursor-pointer glass-panel glass-panel-hover rounded-2xl overflow-hidden border border-indigo-500/20 flex flex-col justify-between transition-all duration-300">
-            
-            <!-- Graphical Header Preview -->
-            <div class="relative h-56 w-full bg-slate-950/80 border-b border-indigo-500/20 overflow-hidden flex items-center justify-center p-6">
-              
-              <div class="absolute inset-0 bg-gradient-to-br {{ project.gradient }} opacity-60 group-hover:opacity-100 transition-opacity"></div>
-              
-              <!-- Realistic project mock dynamic preview -->
-              @switch (project.id) {
-                @case ('malta-health-portal') {
-                  <div class="relative z-10 w-full max-w-sm rounded-xl bg-slate-900/95 border border-cyan-500/40 p-4 font-mono text-[11px] text-slate-200 shadow-2xl space-y-2">
-                    <div class="flex items-center justify-between pb-1.5 border-b border-indigo-500/30">
-                      <span class="text-cyan-300 font-bold">Malta Ministry of Health</span>
-                      <span class="text-emerald-400 font-semibold">SECURE RBAC</span>
-                    </div>
-                    <div class="text-slate-300 flex items-center justify-between">
-                      <span>Angular Frontend: Standalone Core</span>
-                      <span class="text-cyan-400">&bull; 60 FPS</span>
-                    </div>
-                    <div class="text-slate-400 text-[10px]">.NET Core 8 WebAPI &bull; MS SQL Server Transaction Pool</div>
-                  </div>
-                }
-                @case ('dotnet-api-gateway') {
-                  <div class="relative z-10 w-full max-w-sm rounded-xl bg-slate-900/95 border border-indigo-500/40 p-3.5 font-mono text-[11px] text-slate-200 shadow-2xl space-y-1.5">
-                    <div class="flex items-center justify-between text-indigo-300 pb-1 border-b border-indigo-500/30">
-                      <span>dotnet-api::health_pipeline</span>
-                      <span class="text-emerald-400">LATENCY 38ms</span>
-                    </div>
-                    <div class="text-slate-400">[GET] /api/v2/patient/telemetry &bull; HTTP 200 OK</div>
-                    <div class="text-cyan-300">&gt; AzureDevOps::Release_Pipeline #142 (Passed)</div>
-                  </div>
-                }
-                @case ('mobile-clinic-suite') {
-                  <div class="relative z-10 flex items-center justify-center gap-4">
-                    <div class="w-20 h-28 rounded-2xl bg-slate-900 border-2 border-cyan-400/50 p-2 flex flex-col justify-between shadow-2xl">
-                      <div class="w-6 h-1 bg-cyan-400/50 rounded-full mx-auto"></div>
-                      <div class="text-center font-mono text-[9px] text-cyan-300 font-bold">Flutter Mobile</div>
-                      <div class="w-3 h-3 rounded-full bg-cyan-400/30 mx-auto"></div>
-                    </div>
-                    <div class="space-y-1 text-xs font-mono text-slate-300">
-                      <div class="text-emerald-400 font-bold">iOS & Android</div>
-                      <div>Dart &bull; Visual Studio</div>
-                      <div>Offline Cache SQLite</div>
-                    </div>
-                  </div>
-                }
-                @default {
-                  <div class="relative z-10 flex items-center justify-center w-24 h-24 rounded-2xl bg-slate-900/90 border border-cyan-500/30 text-white font-mono text-xl font-bold group-hover:scale-110 transition-transform shadow-xl">
-                    {{ project.title.slice(0, 2).toUpperCase() }}
-                  </div>
-                }
-              }
-
-              <!-- Year and Client Badge -->
-              <div class="absolute top-4 left-4 z-20 px-2.5 py-1 rounded-md bg-slate-900/90 border border-indigo-500/30 font-mono text-[11px] text-cyan-300 font-semibold">
-                {{ project.year }}
-              </div>
-
-              <div class="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity px-2.5 py-1 rounded-md bg-cyan-400 text-slate-950 font-mono text-[11px] font-bold flex items-center gap-1 shadow-md">
-                <span>Inspect Architecture</span>
-                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-
-            </div>
-
-            <!-- Card Body -->
-            <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
-              <div>
-                <div class="text-[11px] font-mono text-cyan-400 font-semibold uppercase tracking-wider">
-                  {{ project.client }}
-                </div>
-                <h3 class="text-xl font-bold font-heading text-white group-hover:text-cyan-300 transition-colors mt-1">
-                  {{ project.title }}
-                </h3>
-                <p class="text-xs font-mono text-slate-400 mt-1">
-                  {{ project.tagline }}
-                </p>
-                <p class="text-sm text-slate-300 mt-3 leading-relaxed">
-                  {{ project.description }}
-                </p>
-              </div>
-
-              <!-- Metrics -->
-              <div class="pt-4 border-t border-indigo-500/15 grid grid-cols-3 gap-2">
-                @for (stat of project.stats; track stat.label) {
-                  <div>
-                    <div class="text-[10px] font-mono text-slate-400 uppercase">{{ stat.label }}</div>
-                    <div class="text-xs font-bold text-white mt-0.5">{{ stat.value }}</div>
-                  </div>
-                }
-              </div>
-
-              <!-- Tags -->
-              <div class="flex flex-wrap items-center gap-1.5 pt-2">
-                @for (tag of project.tags; track tag) {
-                  <span class="px-2 py-0.5 rounded-md bg-slate-900/80 border border-indigo-500/20 text-[11px] font-mono text-slate-300">
-                    {{ tag }}
-                  </span>
-                }
-              </div>
-
-            </div>
-
-          </article>
-        }
+      <!-- Mobile Pill Tags Row (when screens are below lg) -->
+      <div class="flex lg:hidden flex-wrap items-center justify-center gap-3 pt-6">
+        <div class="screenshot-pill">
+          <span class="pill-icon bg-[#f97316]">⚡</span>
+          <span>Product Design</span>
+        </div>
+        <div class="screenshot-pill">
+          <span class="pill-icon bg-[#0ea5e9]">⚡</span>
+          <span>UX Design</span>
+        </div>
+        <div class="screenshot-pill">
+          <span class="pill-icon bg-white/20">⚡</span>
+          <span>User Research</span>
+        </div>
+        <div class="screenshot-pill">
+          <span class="pill-icon bg-[#eab308]">⚡</span>
+          <span>Design Systems</span>
+        </div>
+        <div class="screenshot-pill">
+          <span class="pill-icon bg-[#ec4899]">⚡</span>
+          <span>Usability Testing</span>
+        </div>
+        <div class="screenshot-pill">
+          <span class="pill-icon bg-[#22c55e]">⚡</span>
+          <span>Brand Identity</span>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <!-- Complete Skillset & Toolset Matrix (Extracted from CV) -->
-  <section id="skills" class="py-20 px-4 sm:px-8 max-w-6xl mx-auto w-full border-t border-indigo-500/10">
-    <div class="space-y-10">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ 04. TECHNICAL COMPETENCIES ]</span>
-          <h2 class="text-3xl sm:text-5xl font-bold font-heading text-white mt-2">
-            Skillset & Toolset.
-          </h2>
-          <p class="text-sm text-slate-300 mt-1">
-            Categorized core capabilities from 5+ years of enterprise, government, and mobile application engineering.
-          </p>
-        </div>
+  <!-- ============================================================== -->
+  <!-- SECTION 02: HERE'S HOW IT WORKS (SCREENSHOT 2) -->
+  <!-- ============================================================== -->
+  <section id="process" class="relative py-16">
+    <!-- Ambient Lime Glow Backdrop -->
+    <div class="lime-ambient-glow w-[550px] h-[360px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
 
-        <!-- Skill Tab Category Switcher -->
-        <div class="flex flex-wrap items-center gap-2 p-1.5 rounded-xl bg-slate-900/90 border border-indigo-500/20 text-xs">
-          <button 
-            (click)="activeSkillTab.set('frontend')"
-            [class.bg-cyan-400]="activeSkillTab() === 'frontend'"
-            [class.text-slate-950]="activeSkillTab() === 'frontend'"
-            [class.text-slate-300]="activeSkillTab() !== 'frontend'"
-            class="px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            Frontend & Mobile
-          </button>
-          <button 
-            (click)="activeSkillTab.set('backend-db')"
-            [class.bg-cyan-400]="activeSkillTab() === 'backend-db'"
-            [class.text-slate-950]="activeSkillTab() === 'backend-db'"
-            [class.text-slate-300]="activeSkillTab() !== 'backend-db'"
-            class="px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            .NET, SQL & Backend
-          </button>
-          <button 
-            (click)="activeSkillTab.set('cloud-tools')"
-            [class.bg-cyan-400]="activeSkillTab() === 'cloud-tools'"
-            [class.text-slate-950]="activeSkillTab() === 'cloud-tools'"
-            [class.text-slate-300]="activeSkillTab() !== 'cloud-tools'"
-            class="px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            Azure DevOps & Agile
-          </button>
-          <button 
-            (click)="activeSkillTab.set('ai-modern')"
-            [class.bg-cyan-400]="activeSkillTab() === 'ai-modern'"
-            [class.text-slate-950]="activeSkillTab() === 'ai-modern'"
-            [class.text-slate-300]="activeSkillTab() !== 'ai-modern'"
-            class="px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer">
-            AI Tools & UI/UX
-          </button>
-        </div>
-      </div>
+    <div class="relative z-10 space-y-16">
+      <h2 class="text-4xl sm:text-5xl font-normal text-center text-white tracking-tight">
+        Here's how it works
+      </h2>
 
-      <!-- Skills Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @for (skill of filteredSkills(); track skill.name) {
-          <div 
-            (click)="inspectSkill(skill)"
-            class="glass-panel glass-panel-hover p-6 rounded-2xl border border-indigo-500/20 space-y-4 cursor-pointer">
-            
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-bold text-white font-heading">
-                {{ skill.name }}
-              </h3>
-              <span class="text-xs font-mono text-cyan-300 font-semibold">{{ skill.level }}%</span>
-            </div>
-
-            <!-- Progress Meter -->
-            <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
-              <div 
-                class="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 rounded-full transition-all duration-700"
-                [style.width.%]="skill.level"></div>
-            </div>
-
-            <p class="text-xs text-slate-300 leading-relaxed">
-              {{ skill.description }}
-            </p>
-
-            <div class="flex flex-wrap gap-1.5 pt-2">
-              @for (tag of skill.tags; track tag) {
-                <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-indigo-500/20 text-[10px] font-mono text-cyan-300">
-                  #{{ tag }}
-                </span>
-              }
-            </div>
-
-          </div>
-        }
-      </div>
-
-      <!-- Skill Inspection Drawer -->
-      @if (selectedSkill()) {
-        <div class="p-6 rounded-2xl bg-slate-900/95 border border-cyan-400/50 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-modal-content">
-          <div class="space-y-1">
-            <div class="text-xs font-mono text-cyan-400 uppercase tracking-wider font-bold">PROFICIENCY DETAILS: {{ selectedSkill()?.name }}</div>
-            <p class="text-sm text-slate-200">{{ selectedSkill()?.description }}</p>
-          </div>
-          <button 
-            (click)="closeSkillInspection()"
-            class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono text-white transition-colors cursor-pointer shrink-0">
-            Close ✕
-          </button>
-        </div>
-      }
-
-    </div>
-  </section>
-
-  <!-- Education & Certifications Section -->
-  <section id="education" class="py-20 px-4 sm:px-8 max-w-6xl mx-auto w-full border-t border-indigo-500/10">
-    <div class="space-y-10">
-      <div>
-        <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ 05. ACADEMIC CREDENTIALS ]</span>
-        <h2 class="text-3xl sm:text-4xl font-bold font-heading text-white mt-2">
-          Education & Certifications.
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @for (edu of education; track edu.degree) {
-          <div class="glass-panel p-6 sm:p-7 rounded-2xl border border-indigo-500/20 flex flex-col justify-between space-y-6">
-            <div class="space-y-3">
-              <span class="px-2.5 py-1 rounded-md bg-indigo-500/20 border border-indigo-400/30 text-[10px] font-mono text-cyan-300 font-semibold">
-                {{ edu.period }}
-              </span>
-              <h3 class="text-lg font-bold text-white font-heading mt-2">
-                {{ edu.degree }}
-              </h3>
-              <div class="text-sm font-semibold text-cyan-400">{{ edu.institution }}</div>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                {{ edu.description }}
-              </p>
-            </div>
-            <div class="text-xs font-mono text-emerald-400 pt-3 border-t border-indigo-500/15">
-              Verified Accreditation
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact & Senior Role Collaboration Section -->
-  <section id="contact" class="py-24 px-4 sm:px-8 max-w-6xl mx-auto w-full border-t border-indigo-500/10">
-    <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-indigo-500/30 relative overflow-hidden shadow-2xl">
-      
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
+      <!-- 3 Tilted Cards with Connected Loop SVG -->
+      <div class="relative max-w-5xl mx-auto">
         
-        <!-- Left Column: Direct Contact Details -->
-        <div class="lg:col-span-5 space-y-6">
-          <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ 06. CONNECT & RECRUIT ]</span>
-          <h2 class="text-3xl sm:text-5xl font-bold font-heading text-white leading-tight">
-            Ready for your next Senior Full Stack challenge.
-          </h2>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            Currently based in <strong>Birkirkara, Malta</strong>, bringing 5+ years of verified software development, government health systems delivery, and end-to-end full stack architecture.
-          </p>
+        <!-- Connected Doodle Neon Green Line (Desktop) -->
+        <svg class="hidden md:block absolute inset-0 w-full h-full pointer-events-none z-20" viewBox="0 0 1000 350" fill="none" preserveAspectRatio="none">
+          <!-- Loop from Card 01 to Card 02 -->
+          <path d="M 280, 80 C 330, 20 370, 25 380, 75 C 385, 95 365, 110 355, 95 C 345, 80 370, 70 410, 75" 
+                stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="280" cy="80" r="4" fill="none" stroke="#4ade80" stroke-width="2.5" />
+          <circle cx="410" cy="75" r="4" fill="none" stroke="#4ade80" stroke-width="2.5" />
 
-          <div class="space-y-4 pt-4">
-            <!-- Email -->
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-slate-800 border border-indigo-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-slate-400">DIRECT EMAIL</div>
-                <button (click)="copyEmail()" class="text-sm font-mono text-white hover:text-cyan-300 transition-colors cursor-pointer text-left">
-                  {{ candidate.email }}
-                </button>
-              </div>
+          <!-- Loop from Card 02 to Card 03 -->
+          <path d="M 590, 200 C 640, 220 655, 185 640, 190 C 625, 195 645, 235 675, 220 C 700, 210 710, 240 730, 235" 
+                stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="590" cy="200" r="4" fill="none" stroke="#4ade80" stroke-width="2.5" />
+          <circle cx="730" cy="235" r="4" fill="none" stroke="#4ade80" stroke-width="2.5" />
+        </svg>
+
+        <!-- 3 Process Cards Grid -->
+        <div class="grid md:grid-cols-3 gap-6 sm:gap-8 items-center pt-4">
+          
+          <!-- Card 01: Discover (Tilted Counter-Clockwise) -->
+          <div class="process-card transform md:-rotate-3 hover:md:rotate-0 transition-transform flex flex-col justify-between min-h-[360px] sm:min-h-[400px]">
+            <div>
+              <span class="text-5xl sm:text-6xl font-light text-white tracking-tight block">01</span>
             </div>
-
-            <!-- Phone -->
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-slate-800 border border-indigo-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-slate-400">MOBILE / WHATSAPP</div>
-                <button (click)="copyPhone()" class="text-sm font-mono text-white hover:text-cyan-300 transition-colors cursor-pointer text-left">
-                  {{ candidate.phone }}
-                </button>
-              </div>
-            </div>
-
-            <!-- Location -->
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-slate-800 border border-indigo-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <div>
-                <div class="text-[11px] font-mono text-slate-400">LOCATION & AVAILABILITY</div>
-                <div class="text-sm text-slate-200">{{ candidate.location }} &bull; Immediate / Flexible</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Professional Links -->
-          <div class="pt-6 flex items-center gap-3">
-            <a [href]="candidate.linkedin" target="_blank" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-indigo-500/30 flex items-center gap-2 text-xs font-semibold text-white transition-all shadow-md">
-              <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-              </svg>
-              <span>View LinkedIn Profile</span>
-            </a>
-          </div>
-
-        </div>
-
-        <!-- Right Column: Interactive Role Inquiry Form -->
-        <div class="lg:col-span-7">
-          @if (contactSubmitted()) {
-            <div class="p-8 rounded-2xl bg-slate-900/95 border border-emerald-400/50 text-center space-y-4 animate-modal-content">
-              <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold font-heading text-white">Inquiry Dispatched</h3>
-              <p class="text-sm text-slate-300 max-w-md mx-auto">
-                Thank you, {{ contactName() }}. Swathy will review your role requirements and reply promptly.
+            <div class="space-y-2 mt-20">
+              <h3 class="text-2xl font-normal text-white">Discover</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Understanding your goals, users, and challenges through research and strategy.
               </p>
-              <button 
-                (click)="resetContactForm()"
-                class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono text-white transition-colors cursor-pointer">
-                Submit Another Inquiry
-              </button>
             </div>
-          } @else {
-            <form (submit)="submitContact($event)" class="space-y-6">
-              
-              <!-- Role Nature Pill Selector -->
-              <div>
-                <label class="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-2">Role Opportunity Type</label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <button 
-                    type="button"
-                    (click)="contactType.set('Senior Full Stack Developer Role')"
-                    [class.bg-cyan-400]="contactType() === 'Senior Full Stack Developer Role'"
-                    [class.text-slate-950]="contactType() === 'Senior Full Stack Developer Role'"
-                    [class.text-slate-300]="contactType() !== 'Senior Full Stack Developer Role'"
-                    class="px-3 py-2 rounded-xl bg-slate-800/90 border border-indigo-500/20 text-xs font-semibold transition-all cursor-pointer text-center">
-                    Senior Full Stack
-                  </button>
-                  <button 
-                    type="button"
-                    (click)="contactType.set('Lead Angular & .NET Architect')"
-                    [class.bg-cyan-400]="contactType() === 'Lead Angular & .NET Architect'"
-                    [class.text-slate-950]="contactType() === 'Lead Angular & .NET Architect'"
-                    [class.text-slate-300]="contactType() !== 'Lead Angular & .NET Architect'"
-                    class="px-3 py-2 rounded-xl bg-slate-800/90 border border-indigo-500/20 text-xs font-semibold transition-all cursor-pointer text-center">
-                    Angular & .NET Lead
-                  </button>
-                  <button 
-                    type="button"
-                    (click)="contactType.set('Enterprise Consulting / Contract')"
-                    [class.bg-cyan-400]="contactType() === 'Enterprise Consulting / Contract'"
-                    [class.text-slate-950]="contactType() === 'Enterprise Consulting / Contract'"
-                    [class.text-slate-300]="contactType() !== 'Enterprise Consulting / Contract'"
-                    class="px-3 py-2 rounded-xl bg-slate-800/90 border border-indigo-500/20 text-xs font-semibold transition-all cursor-pointer text-center">
-                    Consulting / Advisory
-                  </button>
-                </div>
-              </div>
+          </div>
 
-              <!-- Contact Inputs -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-2">Your Name / Company</label>
-                  <input 
-                    type="text"
-                    required
-                    [value]="contactName()"
-                    (input)="contactName.set($any($event.target).value)"
-                    placeholder="e.g. Hiring Manager / Tech Recruiter"
-                    class="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-indigo-500/30 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors" />
-                </div>
-                <div>
-                  <label class="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-2">Work Email</label>
-                  <input 
-                    type="email"
-                    required
-                    [value]="contactEmail()"
-                    (input)="contactEmail.set($any($event.target).value)"
-                    placeholder="recruitment@company.com"
-                    class="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-indigo-500/30 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors" />
-                </div>
-              </div>
+          <!-- Card 02: Design (Tilted Clockwise & Slightly Raised) -->
+          <div class="process-card transform md:rotate-2 md:-translate-y-6 hover:md:rotate-0 transition-transform flex flex-col justify-between min-h-[360px] sm:min-h-[400px]">
+            <div>
+              <span class="text-5xl sm:text-6xl font-light text-white tracking-tight block">02</span>
+            </div>
+            <div class="space-y-2 mt-20">
+              <h3 class="text-2xl font-normal text-white">Design</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Transforming insights into intuitive, beautiful, and functional product experiences.
+              </p>
+            </div>
+          </div>
 
-              <!-- Message -->
-              <div>
-                <label class="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-2">Opportunity Overview</label>
-                <textarea 
-                  rows="4"
-                  required
-                  [value]="contactMessage()"
-                  (input)="contactMessage.set($any($event.target).value)"
-                  placeholder="Share details on your tech stack, scope, and interview schedule..."
-                  class="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-indigo-500/30 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors resize-none"></textarea>
-              </div>
+          <!-- Card 03: Deliver (Tilted Clockwise) -->
+          <div class="process-card transform md:rotate-1 hover:md:rotate-0 transition-transform flex flex-col justify-between min-h-[360px] sm:min-h-[400px]">
+            <div>
+              <span class="text-5xl sm:text-6xl font-light text-white tracking-tight block">03</span>
+            </div>
+            <div class="space-y-2 mt-20">
+              <h3 class="text-2xl font-normal text-white">Deliver</h3>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Testing, refining, and launching the final product with clarity and precision.
+              </p>
+            </div>
+          </div>
 
-              <!-- Submit -->
-              <button 
-                type="submit"
-                class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer">
-                <span>Send Opportunity / Schedule Interview</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
-
-            </form>
-          }
         </div>
-
       </div>
-
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="mt-auto py-8 px-4 sm:px-8 border-t border-indigo-500/15 text-xs text-slate-400 font-mono">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span>&copy; 2026 Swathy Krishna &bull; Birkirkara, Malta</span>
+  <!-- ============================================================== -->
+  <!-- SECTION 03: SELECTED WORKS 2X2 GRID (SCREENSHOT 3) -->
+  <!-- ============================================================== -->
+  <section id="selected-works" class="relative py-16">
+    <!-- Ambient Lime Glow Backdrop -->
+    <div class="lime-ambient-glow w-[600px] h-[500px] top-1/3 right-10"></div>
+
+    <div class="relative z-10 space-y-14">
+      <!-- Section Header -->
+      <div class="text-center space-y-2">
+        <p class="font-serif-italic text-2xl sm:text-3xl text-white">/ Best Projects</p>
+        <h2 class="text-4xl sm:text-6xl font-normal text-white tracking-tight">
+          Selected Works
+        </h2>
       </div>
-      <div class="flex items-center gap-6">
-        <span>Angular & .NET Enterprise Stack</span>
-        <span>&bull;</span>
-        <button (click)="scrollTo('hero')" class="text-cyan-300 hover:underline cursor-pointer">Back to Top ↑</button>
+
+      <!-- 2x2 Grid of Framed Work Mockups (Screenshot 3) -->
+      <div class="grid md:grid-cols-2 gap-8 sm:gap-10 max-w-6xl mx-auto">
+        
+        <!-- Project 1: Finvera Dashboard -->
+        <div (click)="openProjectModal(projects()[0])" class="group cursor-pointer space-y-4">
+          <div class="work-mockup-frame">
+            <div class="w-full aspect-[16/10] overflow-hidden rounded-2xl bg-slate-900 border border-white/10">
+              <img src="/work-finvera.jpg" alt="Finvera Dashboard Mockup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+            </div>
+          </div>
+          <div class="flex items-center justify-between px-2">
+            <div>
+              <h3 class="text-xl font-medium text-white group-hover:text-emerald-400 transition-colors">
+                Finvera Dashboard
+              </h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Malta Ministry of Health Enterprise Portal</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="work-chip">Fintech</span>
+              <span class="work-chip">Product Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: Havenly Real Estate -->
+        <div (click)="openProjectModal(projects()[1])" class="group cursor-pointer space-y-4">
+          <div class="work-mockup-frame">
+            <div class="w-full aspect-[16/10] overflow-hidden rounded-2xl bg-slate-900 border border-white/10">
+              <img src="/work-havenly.jpg" alt="Havenly Real Estate Mockup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+            </div>
+          </div>
+          <div class="flex items-center justify-between px-2">
+            <div>
+              <h3 class="text-xl font-medium text-white group-hover:text-emerald-400 transition-colors">
+                Havenly Real Estate
+              </h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Healthcare Core Sync & Records Platform</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="work-chip">Web App</span>
+              <span class="work-chip">UX/UI Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: Growrity Marketing -->
+        <div (click)="openProjectModal(projects()[3])" class="group cursor-pointer space-y-4">
+          <div class="work-mockup-frame">
+            <div class="w-full aspect-[16/10] overflow-hidden rounded-2xl bg-slate-900 border border-white/10">
+              <img src="/work-growrity.jpg" alt="Growrity Marketing Mockup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+            </div>
+          </div>
+          <div class="flex items-center justify-between px-2">
+            <div>
+              <h3 class="text-xl font-medium text-white group-hover:text-emerald-400 transition-colors">
+                Growrity Marketing
+              </h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">Ministry Health Telemetry & Power BI Dashboard</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="work-chip">Enterprise</span>
+              <span class="work-chip">Data Platform</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4: Trusten Mobile App -->
+        <div (click)="openProjectModal(projects()[2])" class="group cursor-pointer space-y-4">
+          <div class="work-mockup-frame">
+            <div class="w-full aspect-[16/10] overflow-hidden rounded-2xl bg-slate-900 border border-white/10">
+              <img src="/work-trusten.jpg" alt="Trusten Mobile App Mockup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+            </div>
+          </div>
+          <div class="flex items-center justify-between px-2">
+            <div>
+              <h3 class="text-xl font-medium text-white group-hover:text-emerald-400 transition-colors">
+                Trusten Mobile App
+              </h3>
+              <p class="text-xs text-slate-400 font-mono mt-0.5">CarePulse Mobile Telehealth App</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="work-chip">Mobile App</span>
+              <span class="work-chip">Flutter & iOS</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-  </footer>
+  </section>
 
-</div>
-
-<!-- Project Modal Deep-Dive -->
-@if (selectedProject()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-modal-backdrop">
-    <div 
-      class="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#0c1224] border border-cyan-500/40 p-6 sm:p-8 shadow-2xl relative animate-modal-content space-y-6">
+  <!-- ============================================================== -->
+  <!-- SECTION 04: PUSHING BOUNDARIES SINCE 2011 / 2019 (SCREENSHOT 4) -->
+  <!-- ============================================================== -->
+  <section id="pushing-boundaries" class="relative py-16">
+    <div class="space-y-16 max-w-6xl mx-auto">
       
-      <button 
-        (click)="closeProjectModal()"
-        class="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-        title="Close dialog">
+      <!-- Section Header -->
+      <div class="text-center space-y-2">
+        <p class="font-serif-italic text-2xl sm:text-3xl text-white">/ Who Am I</p>
+        <h2 class="text-4xl sm:text-6xl font-normal text-white tracking-tight">
+          Pushing Boundaries <span class="text-slate-400 font-light">since 2019</span>
+        </h2>
+      </div>
+
+      <!-- Split 2-Column Layout (Screenshot 4) -->
+      <div class="grid lg:grid-cols-12 gap-12 sm:gap-16 items-start">
+        
+        <!-- Left Column: Dark Photo Frame & Socials + Author Subtitle -->
+        <div class="lg:col-span-5 space-y-5">
+          <!-- Dark Portrait Card with User's Uploaded Picture pointing right -->
+          <div class="w-full aspect-[3/4] sm:aspect-[4/5] rounded-3xl bg-[#0b0f17] p-2.5 border border-white/15 shadow-2xl overflow-hidden flex items-center justify-center group">
+            <img src="/swathy-pointing.jpg" alt="Swathy Krishna - Full Stack Developer" class="w-full h-full object-cover object-top rounded-2xl transition-transform duration-500 group-hover:scale-103">
+          </div>
+
+          <!-- Bottom Meta Bar: Socials (Left) & Name/Title (Right) -->
+          <div class="flex items-center justify-between px-1">
+            <!-- Social Icons -->
+            <div class="flex items-center gap-3">
+              <!-- X / Twitter Icon -->
+              <a href="https://twitter.com" target="_blank" class="w-9 h-9 rounded-full bg-white/10 hover:bg-emerald-500 text-slate-300 hover:text-slate-950 border border-white/10 flex items-center justify-center transition-colors shadow-sm">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <!-- LinkedIn Icon -->
+              <a [href]="candidate.linkedin" target="_blank" class="w-9 h-9 rounded-full bg-white/10 hover:bg-[#0077b5] text-slate-300 hover:text-white border border-white/10 flex items-center justify-center transition-colors shadow-sm">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <!-- GitHub / Portfolio Link -->
+              <a href="https://github.com" target="_blank" class="w-9 h-9 rounded-full bg-white/10 hover:bg-emerald-500 text-slate-300 hover:text-slate-950 border border-white/10 flex items-center justify-center transition-colors shadow-sm">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Author & Subtitle -->
+            <div class="text-right">
+              <h4 class="font-normal text-base text-white">Swathy Krishna</h4>
+              <p class="text-xs text-emerald-400 font-mono">Full Stack Developer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Bio Paragraph & Experience Table (Screenshot 4) -->
+        <div class="lg:col-span-7 space-y-10">
+          <!-- Clean Bio Paragraph -->
+          <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+            A full stack developer passionate about creating intuitive digital experiences and mission-critical systems. I've collaborated with teams to design and build platforms that blend usability, robust architecture, and clean code, focusing on solving problems through an engineering journey process.
+          </p>
+
+          <!-- Horizontal Clean Experience Table (Screenshot 4) -->
+          <div class="space-y-1 border-t border-white/10 pt-2">
+            
+            <!-- Row 1 -->
+            <div class="exp-row group">
+              <div class="font-normal text-white">Full Stack Developer</div>
+              <div class="text-slate-400">Cursor Limited (Malta)</div>
+              <div class="text-right font-normal text-emerald-400 font-mono">2025 → Now</div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="exp-row group">
+              <div class="font-normal text-white">System Implementation Specialist</div>
+              <div class="text-slate-400">Cursor Limited (Malta)</div>
+              <div class="text-right font-normal text-slate-400 font-mono">2023 → 2025</div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="exp-row group">
+              <div class="font-normal text-white">Junior Software Engineer</div>
+              <div class="text-slate-400">Cocobyte Software Solutions</div>
+              <div class="text-right font-normal text-slate-400 font-mono">2020 → 2022</div>
+            </div>
+
+            <!-- Row 4 -->
+            <div class="exp-row group">
+              <div class="font-normal text-white">Associate Software Engineer</div>
+              <div class="text-slate-400">mStack Innovation Labs</div>
+              <div class="text-right font-normal text-slate-400 font-mono">2019 → 2020</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SECTION 05: CONTACT & COLLABORATE -->
+  <!-- ============================================================== -->
+  <section id="contact" class="py-16 space-y-10 text-center max-w-3xl mx-auto">
+    <div class="space-y-2">
+      <p class="font-serif-italic text-2xl sm:text-3xl text-white">/ Get in Touch</p>
+      <h2 class="text-4xl sm:text-6xl font-normal text-white tracking-tight">
+        Let's Collaborate
+      </h2>
+    </div>
+
+    <p class="text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
+      Available for Full Stack Developer, Technical Architect, or Consulting engagements in Malta, hybrid, or remote globally.
+    </p>
+
+    <!-- Quick Action Contact Buttons -->
+    <div class="flex flex-wrap justify-center gap-4 pt-2">
+      <button (click)="copyEmail()" class="btn btn-accent !py-3.5 !px-8 text-sm font-semibold shadow-xl">
+        ✉ Copy Email ({{ candidate.email }})
+      </button>
+      <button (click)="copyPhone()" class="btn !py-3.5 !px-8 text-sm font-semibold">
+        ☎ Copy Phone ({{ candidate.phone }})
+      </button>
+      <a [href]="candidate.linkedin" target="_blank" class="btn text-sm font-semibold">
+        LinkedIn ↗
+      </a>
+    </div>
+
+    <!-- Contact Form Card -->
+    <div class="card-glass p-8 sm:p-10 border border-white/10 text-left mt-8">
+      @if (contactSubmitted()) {
+        <div class="text-center py-8 space-y-3">
+          <div class="text-5xl">🎉</div>
+          <h4 class="font-bold text-2xl text-white">Message Dispatched!</h4>
+          <p class="text-sm text-slate-300">Thanks {{ contactName() }} — Swathy will review your note and respond promptly.</p>
+          <button (click)="resetContactForm()" class="btn !py-2 !px-5 text-xs mt-3">Send Another Message</button>
+        </div>
+      } @else {
+        <form (submit)="submitContact($event)" class="space-y-4">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="font-mono text-xs uppercase text-slate-400">Your Name / Company</label>
+              <input class="input mt-1.5" type="text" required [value]="contactName()" (input)="contactName.set($any($event.target).value)" placeholder="Hiring Manager / Tech Lead">
+            </div>
+            <div>
+              <label class="font-mono text-xs uppercase text-slate-400">Work Email</label>
+              <input class="input mt-1.5" type="email" required [value]="contactEmail()" (input)="contactEmail.set($any($event.target).value)" placeholder="lead@company.com">
+            </div>
+          </div>
+          <div>
+            <label class="font-mono text-xs uppercase text-slate-400">Project or Role Scope</label>
+            <textarea class="input mt-1.5 resize-none" rows="3" required [value]="contactMessage()" (input)="contactMessage.set($any($event.target).value)" placeholder="Stack requirements, timeline, and vision..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-accent w-full justify-center !py-3.5 font-bold shadow-lg">
+            Send Inquiry →
+          </button>
+        </form>
+      }
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-white/10 bg-black/60 relative z-10 py-10 text-center text-xs text-slate-400 font-mono">
+  © 2026 Swathy Krishna · Full Stack Developer (.NET & Angular) · Birkirkara, Malta
+</footer>
+
+<!-- Case Study Modal -->
+@if (selectedProject()) {
+  <div class="fixed inset-0 z-50 grid place-items-center p-4 bg-black/80 backdrop-blur-md animate-modal-backdrop" (click)="closeProjectModal()">
+    <div class="card-glass w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 sm:p-9 relative space-y-6 border border-white/15 shadow-2xl animate-modal-content" (click)="$event.stopPropagation()">
+      <button (click)="closeProjectModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/15 bg-white/10 hover:bg-white/20 text-white font-bold cursor-pointer grid place-items-center transition-colors" aria-label="Close">
         ✕
       </button>
 
-      <div class="pr-12 space-y-2">
-        <div class="flex items-center gap-2">
-          <span class="px-2.5 py-0.5 rounded-full bg-slate-800 text-[11px] font-mono text-cyan-300 font-bold">
-            {{ selectedProject()?.year }} &bull; {{ selectedProject()?.client }}
-          </span>
-        </div>
-        <h2 class="text-2xl sm:text-4xl font-bold font-heading text-white">
-          {{ selectedProject()?.title }}
-        </h2>
-        <p class="text-sm font-mono text-slate-300">
-          {{ selectedProject()?.tagline }}
-        </p>
+      <div class="pr-10">
+        <span class="work-chip !bg-emerald-500/15 !text-emerald-400 !border-emerald-500/30">{{ selectedProject()?.year }} · {{ selectedProject()?.client }}</span>
+        <h2 class="mt-3 font-bold text-3xl text-white leading-tight">{{ selectedProject()?.title }}</h2>
+        <p class="mt-1 font-mono text-xs text-slate-400">{{ selectedProject()?.tagline }}</p>
       </div>
 
-      <p class="text-sm text-slate-200 leading-relaxed">
-        {{ selectedProject()?.longDescription }}
-      </p>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed">{{ selectedProject()?.longDescription }}</p>
 
-      <!-- Key Metrics -->
-      <div class="grid grid-cols-3 gap-3 p-4 rounded-xl bg-slate-900/80 border border-indigo-500/20">
-        @for (stat of selectedProject()?.stats; track stat.label) {
-          <div>
-            <div class="text-[10px] font-mono text-slate-400 uppercase">{{ stat.label }}</div>
-            <div class="text-sm font-bold text-cyan-300 mt-0.5">{{ stat.value }}</div>
+      <div class="grid grid-cols-3 gap-3">
+        @for (s of selectedProject()?.stats; track s.label) {
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <div class="font-mono text-[10px] uppercase text-slate-400">{{ s.label }}</div>
+            <div class="font-bold text-base text-white mt-0.5">{{ s.value }}</div>
           </div>
         }
       </div>
 
-      <!-- Architectural Highlights -->
-      <div class="space-y-3">
-        <h4 class="text-xs font-mono text-cyan-400 uppercase tracking-wider font-bold">Architectural Highlights & Engineering Decisions</h4>
-        <ul class="space-y-2 text-xs text-slate-200 list-disc list-inside leading-relaxed bg-slate-900/50 p-4 rounded-xl border border-indigo-500/20">
-          @for (arch of selectedProject()?.architectureDetails; track arch) {
-            <li>{{ arch }}</li>
+      <div>
+        <h4 class="font-bold text-base text-white">Engineering Decisions</h4>
+        <ul class="mt-3 space-y-2 text-xs sm:text-sm text-slate-300">
+          @for (a of selectedProject()?.architectureDetails; track a) {
+            <li class="flex gap-3">
+              <span class="text-emerald-400 font-bold">→</span>
+              <span>{{ a }}</span>
+            </li>
           }
         </ul>
       </div>
 
-      <!-- Tags -->
-      <div class="flex flex-wrap gap-1.5">
-        @for (tag of selectedProject()?.tags; track tag) {
-          <span class="px-2.5 py-1 rounded-md bg-slate-800 text-xs font-mono text-cyan-300">
-            {{ tag }}
-          </span>
+      <div class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+        @for (t of selectedProject()?.tags; track t) {
+          <span class="work-chip">{{ t }}</span>
         }
       </div>
 
-      <div class="pt-4 border-t border-indigo-500/20 flex items-center justify-between">
-        <button 
-          (click)="closeProjectModal()"
-          class="px-5 py-2.5 rounded-xl bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-colors cursor-pointer ml-auto">
-          Close Case Study
-        </button>
+      <div class="text-right pt-2">
+        <button (click)="closeProjectModal()" class="btn btn-accent !py-2 !px-6">Close</button>
       </div>
-
     </div>
   </div>
 }
 
-<!-- CLI Developer Terminal Drawer -->
+<!-- Interactive CLI Drawer -->
 @if (isTerminalOpen()) {
-  <div class="fixed bottom-6 right-6 z-50 w-full max-w-md rounded-2xl bg-[#090e1c] border border-cyan-400/50 shadow-2xl p-5 font-mono text-xs text-slate-200 animate-modal-content">
-    <div class="flex items-center justify-between pb-3 border-b border-indigo-500/30">
-      <div class="flex items-center gap-2">
-        <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-        <div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
-        <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
-        <span class="text-[11px] text-slate-400 ml-1">swathy-cli v5.0</span>
+  <div class="fixed bottom-6 right-6 z-50 w-[calc(100%-3rem)] max-w-lg card-glass p-5 font-mono text-xs animate-modal-content border-[var(--accent)] shadow-2xl" style="background: rgba(10, 13, 22, 0.95)">
+    <div class="flex items-center justify-between pb-3 border-b border-white/10">
+      <div class="flex items-center gap-2 text-[var(--accent)] font-bold">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+        swathy-terminal v5.2
       </div>
-      <button (click)="toggleTerminal()" class="text-slate-400 hover:text-white cursor-pointer">✕</button>
+      <button (click)="toggleTerminal()" class="text-slate-400 hover:text-white cursor-pointer px-2 py-0.5">✕</button>
     </div>
 
-    <div class="py-4 space-y-2 max-h-60 overflow-y-auto">
-      <p class="text-cyan-400">$ swathy --profile</p>
-      <p class="text-slate-300">Swathy Krishna &bull; Senior Full Stack Developer &bull; Birkirkara, Malta</p>
-      
-      <p class="text-cyan-400 pt-2">$ swathy --career-highlight</p>
-      <p class="text-emerald-300">&gt; 2025: Promoted to Full Stack Developer @ Cursor Limited, Malta</p>
-      <p class="text-slate-300">&gt; 2023-2025: System Implementation Specialist (Malta Ministry of Health)</p>
-      <p class="text-amber-300">&gt; March 2024: Best Team Member Award</p>
-      
-      <p class="text-cyan-400 pt-2">$ swathy --stack</p>
-      <p class="text-slate-300">Angular 14-21, .NET Core, C#, MS SQL Server, Azure DevOps, Flutter, Dart, React, Ember.js, REST APIs</p>
+    <div class="py-2.5 flex flex-wrap gap-1.5 border-b border-white/10 text-[10px]">
+      <span class="text-slate-500 self-center">Try:</span>
+      <button (click)="runTerminalCommand('whoami')" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-slate-300">whoami</button>
+      <button (click)="runTerminalCommand('promotion')" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-emerald-400">promotion</button>
+      <button (click)="runTerminalCommand('skills')" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-sky-400">skills</button>
+      <button (click)="runTerminalCommand('projects')" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-purple-400">projects</button>
+      <button (click)="runTerminalCommand('clear')" class="px-2 py-0.5 rounded bg-white/5 hover:bg-white/15 text-rose-400">clear</button>
     </div>
 
-    <div class="pt-3 border-t border-indigo-500/30 flex items-center justify-between text-[11px] text-slate-400">
-      <span>Contact: +356 77925861</span>
-      <button (click)="copyEmail()" class="text-cyan-400 hover:underline cursor-pointer">copyEmail()</button>
+    <div class="py-3 space-y-2 max-h-56 overflow-y-auto leading-relaxed">
+      @for (item of terminalHistory(); track $index) {
+        <div>
+          <div class="text-[var(--accent)]">$ {{ item.command }}</div>
+          <div class="text-slate-300 whitespace-pre-wrap pl-2">{{ item.output }}</div>
+        </div>
+      }
     </div>
+
+    <form (submit)="onTerminalSubmit($event)" class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+      <span class="text-[var(--accent)] font-bold">$</span>
+      <input type="text" class="bg-transparent border-none outline-none text-white w-full font-mono text-xs placeholder-slate-600"
+             placeholder="Type a command..."
+             [value]="terminalInput()"
+             (input)="terminalInput.set($any($event.target).value)">
+      <button type="submit" class="text-xs text-[var(--accent)] font-bold hover:underline cursor-pointer">Run</button>
+    </form>
   </div>
 }
