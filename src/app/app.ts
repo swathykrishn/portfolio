@@ -17,6 +17,9 @@ export interface Project {
   githubUrl?: string;
   featured: boolean;
   architectureDetails: string[];
+  image: string;
+  categoryTag?: string;
+  categoryType?: string;
 }
 
 export interface SkillItem {
@@ -109,142 +112,141 @@ export class App implements OnInit, OnDestroy {
   currentRoleIndex = signal<number>(0);
   private roleInterval: any;
 
-  // Selected Projects showcasing government, healthcare, and enterprise systems
+  // Selected Projects showcasing government, healthcare, and statutory registry systems
   readonly projects = signal<Project[]>([
     {
-      id: 'malta-health-portal',
-      title: 'Malta Ministry of Health Enterprise Portal',
-      tagline: 'Government-grade clinical records & public health workflow system',
+      id: 'malta-cemeteries',
+      title: 'Cemeteries & Burial 2.0',
+      tagline: 'National burial permit generation, plot management & cemetery maintenance system',
       client: 'Malta Ministry of Health (Cursor Limited)',
       category: 'enterprise-health',
       year: '2023 — Present',
       featured: true,
-      gradient: 'from-cyan-500/30 via-blue-600/20 to-indigo-900/30',
-      description: 'Mission-critical healthcare delivery platform modernizing patient intake, departmental referrals, and secure records management across Maltese health institutions.',
-      longDescription: 'Led full-stack implementation using modern Angular and .NET Core RESTful APIs. Engineered responsive, high-accessibility UI components adhering to strict government data governance and security compliance. Orchestrated requirement gathering, system architecture, database optimization in Microsoft SQL Server, and post-deployment medical staff training.',
+      image: 'work-cemeteries.png',
+      categoryTag: 'Government',
+      categoryType: 'Burial & Registry',
+      gradient: 'from-blue-500/30 via-indigo-600/20 to-slate-900/40',
+      description: 'Mission-critical national system modernizing cemetery plot management, burial records, statutory certificates, and public health administration across the Maltese islands.',
+      longDescription: 'Started from inception by meeting directly with cemetery superintendents and Malta Ministry of Health officials to analyze intricate legacy paper records and municipal workflows. Authored exhaustive implementation documents, database schemas, and statutory process blueprints that secured formal scope approval. Engineered the full-stack solution using Angular and ASP.NET Core with SQL Server for spatial plot tracking, grave registry searches, transfer deeds, and public health statutory compliance, working in tight alignment with the engineering team through production rollout and user training.',
       stats: [
         { label: 'Platform Scope', value: 'National' },
-        { label: 'Stack Integrity', value: 'Angular + .NET' },
-        { label: 'Uptime Standard', value: '99.98%' }
+        { label: 'Core Modules', value: 'Burial & Graves' },
+        { label: 'Architecture', value: 'Angular + .NET' }
       ],
-      tags: ['Angular', '.NET Core', 'Microsoft SQL Server', 'Azure DevOps', 'TypeScript', 'Agile'],
+      tags: ['Angular', '.NET Core', 'Microsoft SQL Server', 'Azure DevOps', 'TypeScript', 'Implementation Scoping'],
       architectureDetails: [
-        'Designed high-throughput .NET Core Web API with repository and unit-of-work patterns.',
-        'Modular Angular micro-architecture with reactive forms and custom validation pipelines.',
-        'Enterprise SQL Server indexing and stored procedures reducing query latency by 45%.',
-        'Role-Based Access Control (RBAC) ensuring GDPR and healthcare privacy compliance.'
+        'Initiated project with client stakeholder interviews, formulating comprehensive implementation documents and workflow blueprints.',
+        'Engineered relational SQL Server schema for historical cemetery graves, plot deeds, and lineage tracking.',
+        'Developed responsive Angular interface with interactive plot queries and audit-logged registrar workflows.',
+        'Conducted end-user training sessions for municipal and health ministry registry staff, ensuring smooth adoption.'
       ]
     },
     {
-      id: 'dotnet-api-gateway',
-      title: 'Healthcare Sync & Integration Engine',
-      tagline: 'High-availability .NET Core data pipeline & integration service',
-      client: 'Healthcare Systems Infrastructure',
-      category: 'fullstack-dotnet',
+      id: 'organ-donation',
+      title: 'Organ Donation — Registering Your Wish',
+      tagline: 'National organ donor register & hospital transplant coordination platform (servizz.gov.mt)',
+      client: 'Malta Ministry of Health (Cursor Limited)',
+      category: 'enterprise-health',
+      year: '2024 — Present',
+      featured: true,
+      image: 'work-organdonation.png',
+      categoryTag: 'Healthcare',
+      categoryType: 'National Register',
+      gradient: 'from-emerald-500/30 via-teal-600/20 to-slate-900/40',
+      description: 'High-security national healthcare registry managing citizen organ donor consent, clinical compatibility checks, and real-time coordination for hospital transplant teams.',
+      longDescription: 'Spearheaded project kickoff by meeting with hospital transplant coordinators, clinical directors, and Ministry of Health stakeholders. Formulated high-security implementation documents covering strict GDPR compliance, cryptographic verification, and medical authorization pathways. Collaborated with the technical team to architect and deliver the full-stack system in Angular, ASP.NET Core, and Microsoft SQL Server, delivering instantaneous, tamper-evident donor lookups during critical emergency procedures.',
+      stats: [
+        { label: 'Lookup Speed', value: '< 20ms' },
+        { label: 'Availability', value: '99.99%' },
+        { label: 'Compliance', value: 'Strict GDPR' }
+      ],
+      tags: ['Angular', '.NET Core', 'C#', 'SQL Server', 'Security & Audit', 'Azure DevOps'],
+      architectureDetails: [
+        'Authored end-to-end implementation architecture aligning with national organ donation statutory requirements.',
+        'Implemented secure role-based access control with real-time audit logs for clinical emergency lookups.',
+        'Created reactive Angular donor verification dashboards with instant citizen ID query engine.',
+        'Coordinated with technical team to validate zero-downtime deployment on national health cloud.'
+      ]
+    },
+    {
+      id: 'imas',
+      title: 'IMAS — In-Patients Medicines Approval System',
+      tagline: 'National clinical medicines approval, consultant review & patient requests platform',
+      client: 'Malta Ministry of Health (Cursor Limited)',
+      category: 'enterprise-health',
       year: '2024 — 2025',
       featured: true,
-      gradient: 'from-indigo-500/30 via-purple-600/20 to-slate-900/40',
-      description: 'Distributed synchronization service handling cross-departmental patient telemetry, appointment scheduling, and automated notification dispatches.',
-      longDescription: 'Architected robust backend services in C# .NET with Entity Framework Core, coordinating asynchronous data exchanges between legacy medical databases and modern web portals. Automated CI/CD deployments using Azure DevOps pipelines.',
+      image: 'work-imas.png',
+      categoryTag: 'Clinical',
+      categoryType: 'Medicines Approval',
+      gradient: 'from-teal-500/30 via-emerald-600/20 to-cyan-950/40',
+      description: 'Unified government healthcare platform digitizing medical board assessments, multi-specialist clinical evaluations, disability scoring, and welfare entitlements.',
+      longDescription: 'Began the project by conducting extensive requirement gathering meetings with medical boards, presiding physicians, and health administrators. Prepared detailed system implementation documents and clinical evaluation matrices that streamlined the assessment lifecycle. Collaborated closely with developers and QA to build and deliver full-stack modules in ASP.NET Core and Angular with Microsoft SQL Server, enabling multi-specialist medical case evaluation, digital document attachment, and automated assessment scoring.',
       stats: [
-        { label: 'Sync Latency', value: '< 40ms' },
-        { label: 'Architecture', value: '.NET Core API' },
-        { label: 'CI/CD Builds', value: 'Azure DevOps' }
+        { label: 'Processing Speed', value: '+60% Faster' },
+        { label: 'Scope', value: 'Multi-Board' },
+        { label: 'Stack', value: '.NET Core & Angular' }
       ],
-      tags: ['.NET Core', 'C#', 'SQL Server', 'REST APIs', 'Azure Pipelines', 'Postman'],
+      tags: ['Angular', 'ASP.NET Core', 'SQL Server', 'Medical Workflows', 'TypeScript', 'Azure Boards'],
       architectureDetails: [
-        'Implemented resilient retry policies using Polly with circuit-breaker fault tolerance.',
-        'Automated schema migration workflows integrated with Azure DevOps CI/CD releases.',
-        'Comprehensive unit & integration test coverage verifying critical transaction paths.'
+        'Drafted structured implementation documentation mapping intricate clinical assessment criteria and board reviews.',
+        'Built dynamic medical form engines and scoring algorithms using reactive Angular pipelines.',
+        'Integrated secure document storage and digital signature workflows for official board decisions.',
+        'Led agile sprint boards on Azure DevOps to ensure on-schedule milestone delivery.'
       ]
     },
     {
-      id: 'mobile-clinic-suite',
-      title: 'CarePulse Mobile Telehealth App',
-      tagline: 'Cross-platform mobile diagnostics & patient engagement suite',
-      client: 'Healthcare & Mobile Solutions',
-      category: 'mobile-cloud',
-      year: '2022 — 2024',
-      featured: true,
-      gradient: 'from-emerald-500/30 via-teal-600/20 to-cyan-950/40',
-      description: 'Multi-platform mobile application providing patients real-time lab test results, appointment scheduling, and secure direct consultation feeds.',
-      longDescription: 'Leveraging Flutter, Dart, and responsive UI methodologies to build high-performance mobile clients for Android and iOS. Integrated push notifications, offline local caching with SQLite, and biometric authentication.',
-      stats: [
-        { label: 'Platforms', value: 'iOS & Android' },
-        { label: 'Framework', value: 'Flutter & Dart' },
-        { label: 'App Rating', value: '4.9 / 5.0' }
-      ],
-      tags: ['Flutter', 'Dart', 'Android Studio', 'REST APIs', 'SQLite', 'Figma'],
-      architectureDetails: [
-        'Clean Architecture separation: Domain, Data, and Presentation layers using BLoC pattern.',
-        'Runtime debugging in Visual Studio and Android Studio profiling memory allocation.',
-        'Offline-first synchronization caching updates when connectivity is interrupted.'
-      ]
-    },
-    {
-      id: 'powerbi-analytics',
-      title: 'Ministry Health Telemetry & Power BI Dashboard',
-      tagline: 'Executive analytics dashboard for public healthcare resource allocation',
-      client: 'Public Sector Governance',
+      id: 'healthcare-licensing',
+      title: 'HCSL Portal — Healthcare Standard Licensing',
+      tagline: 'Statutory premises licensing, practitioner permits & regulatory inspections portal',
+      client: 'Malta Ministry of Health (Cursor Limited)',
       category: 'enterprise-health',
-      year: '2024',
-      featured: false,
-      gradient: 'from-amber-500/30 via-orange-600/20 to-slate-900/40',
-      description: 'Interactive analytics dashboard transforming millions of hospital records into actionable insights regarding bed capacity, wait times, and staffing needs.',
-      longDescription: 'Engineered automated ETL queries in Microsoft SQL Server and configured interactive Power BI & PowerApps modules to provide health ministry directors live executive oversight.',
+      year: '2023 — 2024',
+      featured: true,
+      image: 'work-hcsl.png',
+      categoryTag: 'Licensing',
+      categoryType: 'Standards & Audit',
+      gradient: 'from-green-500/30 via-emerald-600/20 to-slate-900/40',
+      description: 'Enterprise licensing and regulatory oversight platform governing private clinics, pharmacies, hospital wards, and practicing medical professional certifications across Malta.',
+      longDescription: 'Started the engagement by meeting regulatory licensing boards to analyze accreditation criteria and statutory inspection protocols. Produced complete implementation documentation defining license lifecycles, on-site inspection checklists, fee processing, and renewal cadences. Partnered with the development team to engineer robust full-stack modules in .NET Core and Angular, reducing processing backlogs and delivering a transparent, audit-ready licensing platform.',
       stats: [
-        { label: 'Insights Speed', value: 'Real-time' },
-        { label: 'Tooling', value: 'Power BI & SQL' },
-        { label: 'Data Points', value: '1M+ Records' }
+        { label: 'Turnaround Time', value: '-50% Time' },
+        { label: 'Premises Scope', value: 'National' },
+        { label: 'Auditing', value: '100% Traceable' }
       ],
-      tags: ['Power BI', 'PowerApps', 'SQL Server', 'SharePoint', 'Data Modeling'],
+      tags: ['Angular', '.NET Core', 'C#', 'SQL Server', 'Licensing & Compliance', 'Monday.com'],
       architectureDetails: [
-        'Optimized DAX measures and SQL analytical queries for sub-second dashboard rendering.',
-        'Automated scheduled refreshes and role-based data visibility per departmental mandate.'
+        'Facilitated client alignment workshops, authoring technical implementation and regulatory compliance documents.',
+        'Architected SQL Server database with multi-tier approval states, license renewals, and penalty tracking.',
+        'Built clean, intuitive Angular applicant and inspector portals with dynamic form validation.',
+        'Trained ministry licensing officers and deployed ongoing post-launch technical enhancements.'
       ]
     },
     {
-      id: 'ember-component-system',
-      title: 'Enterprise Scalable UI Component Library',
-      tagline: 'Reusable design system & widget toolkit for enterprise portals',
-      client: 'mStack Innovation Labs & Cursor Ltd',
-      category: 'fullstack-dotnet',
-      year: '2020 — 2024',
-      featured: false,
-      gradient: 'from-violet-500/30 via-fuchsia-600/20 to-slate-900/40',
-      description: 'Comprehensive design system of accessible, high-performance UI widgets, modal dialogs, data tables, and dynamic form generators.',
-      longDescription: 'Created modular frontend component hierarchies in Angular and Ember.js paired with Bootstrap and modern CSS, standardizing UX across multiple enterprise products.',
+      id: 'cremation-register',
+      title: 'National Cremation Register & Permitting System',
+      tagline: 'Statutory cremation registry, medical certificate verification & authority permit system',
+      client: 'Malta Ministry of Health (Cursor Limited)',
+      category: 'enterprise-health',
+      year: '2024 — 2025',
+      featured: true,
+      image: 'work-cremation.jpg',
+      categoryTag: 'Statutory',
+      categoryType: 'Permits & Records',
+      gradient: 'from-violet-500/30 via-indigo-600/20 to-slate-900/40',
+      description: 'Dedicated statutory recording platform implementing Malta\'s national cremation legislation, regulating medical certificate authorizations, family consent, and facility permits.',
+      longDescription: 'Coordinated initial requirements gathering with government legal advisors and health authorities to translate national cremation statutory acts into technical specifications. Authored rigorous implementation documentation establishing sequential verification stages required prior to permit issuance. Engineered resilient RESTful APIs in C# .NET with an accessible Angular frontend and SQL Server database, working with the team to guarantee airtight legal compliance and tamper-proof records.',
       stats: [
-        { label: 'Components', value: '45+ Widgets' },
-        { label: 'Adoption', value: '100% Teams' },
-        { label: 'Accessibility', value: 'WCAG 2.1 AA' }
+        { label: 'Compliance', value: '100% Statutory' },
+        { label: 'Verification', value: 'Multi-Stage' },
+        { label: 'Audit Trail', value: 'Immutable' }
       ],
-      tags: ['Angular', 'Ember.js', 'Bootstrap', 'TypeScript', 'Figma', 'GitHub'],
+      tags: ['Angular', '.NET Core', 'SQL Server', 'Legal Compliance', 'RESTful APIs', 'Azure DevOps'],
       architectureDetails: [
-        'Atomic design hierarchy ensuring modular reusability across web client suites.',
-        'Zero regression styling using scoped CSS variables and theme contract tokens.'
-      ]
-    },
-    {
-      id: 'ai-assisted-developer-pipeline',
-      title: 'AI-Augmented Full-Stack Delivery Framework',
-      tagline: 'Accelerating enterprise SDLC with GitHub Copilot, Cursor & Azure DevOps',
-      client: 'Engineering Innovation',
-      category: 'mobile-cloud',
-      year: '2025',
-      featured: false,
-      gradient: 'from-cyan-500/30 via-teal-600/20 to-blue-950/40',
-      description: 'Integrating next-generation AI developer tooling (Cursor, GitHub Copilot, Claude, Gemini) into sprint planning, test generation, and code review workflows.',
-      longDescription: 'Empowering full-stack teams to achieve 35% faster feature delivery through intelligent scaffolding, automated SQL query benchmarking, and unit test generation.',
-      stats: [
-        { label: 'Velocity Gain', value: '+35%' },
-        { label: 'AI Suite', value: 'Cursor & Copilot' },
-        { label: 'Code Quality', value: 'A+ SonarQube' }
-      ],
-      tags: ['Cursor', 'GitHub Copilot', 'Azure Boards', 'Jira', 'CI/CD'],
-      architectureDetails: [
-        'Standardized prompt-driven test harnesses for .NET Controllers and Angular Services.',
-        'Automated pull-request summarization and edge-case detection.'
+        'Created formal implementation specifications matching Malta\'s national cremation act legal frameworks.',
+        'Engineered multi-party authorization gates preventing certificate issuance without required sign-offs.',
+        'Constructed high-clarity registrar interfaces in Angular for quick data input and verification.',
+        'Partnered with technical team through sprint cycles to ensure timely delivery and client sign-off.'
       ]
     }
   ]);
@@ -618,7 +620,7 @@ export class App implements OnInit, OnDestroy {
     } else if (cmd === 'skills') {
       output = 'Core: Angular 14-21, TypeScript, .NET Core, C#, MS SQL Server, Azure DevOps, Flutter, REST APIs, Power BI, AI Developer Tooling (Cursor, Copilot).';
     } else if (cmd === 'projects') {
-      output = '1. Malta Ministry of Health Enterprise Portal | 2. Healthcare Sync & Integration Engine (.NET API) | 3. CarePulse Mobile Telehealth App | 4. Ministry Health Power BI Dashboard.';
+      output = '1. Malta Cemeteries & Burials Management System | 2. National Organ Donation Registry | 3. IMAS (Integrated Medical Assessment System) | 4. Healthcare Licensing System | 5. National Cremation Register.';
     } else if (cmd === 'experience') {
       output = '• 2025-Present: Full Stack Developer @ Cursor Limited, Malta\n• 2023-2025: System Implementation Specialist @ Cursor Limited\n• 2020-2022: Junior Software Engineer @ Cocobyte Software Solutions';
     } else if (cmd === 'contact' || cmd === 'hire') {
