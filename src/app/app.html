@@ -52,10 +52,13 @@
   </div>
 
   <!-- State 2: Room Front (Turned Around Facing User) with Slow 3D Rotation -->
-  <div class="hero-rotate-layer"
+  <div class="hero-rotate-layer hero-bg-front"
        [class.hero-front-facing]="isHeroTurnedAround()"
        [class.hero-front-turned]="!isHeroTurnedAround()"
        style="background-image: url('room-front.jpg')">
+    <!-- Waving frames: she raises her hand and waves hello after turning around -->
+    <div class="hero-wave-frame hero-wave-a" [class.is-waving]="isHeroTurnedAround()" style="background-image: url('room-front-wave-a.jpg')"></div>
+    <div class="hero-wave-frame hero-wave-b" [class.is-waving]="isHeroTurnedAround()" style="background-image: url('room-front-wave-b.jpg')"></div>
   </div>
 
   <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 pointer-events-none z-10"></div>
@@ -69,6 +72,15 @@
          class="pointer-events-auto flex flex-col items-center justify-center cursor-pointer group"
          title="Click to meet Swathy!">
       <div class="relative w-72 h-72 sm:w-88 sm:h-88 flex items-center justify-center animate-breathing">
+        <!-- Rotating conic glow -->
+        <div class="hero-conic-glow"></div>
+        <!-- Counter-rotating dashed rings -->
+        <div class="hero-ring hero-ring-outer"></div>
+        <div class="hero-ring hero-ring-inner"></div>
+        <!-- Orbiting dots -->
+        <div class="hero-orbit hero-orbit-1"><span class="hero-orbit-dot"></span></div>
+        <div class="hero-orbit hero-orbit-2"><span class="hero-orbit-dot hero-orbit-dot-alt"></span></div>
+        <div class="hero-orbit hero-orbit-3"><span class="hero-orbit-dot hero-orbit-dot-sm"></span></div>
         <svg viewBox="0 0 300 300" class="w-full h-full animate-spin-circular drop-shadow-2xl">
           <path id="badgeCircle" d="M 150, 150 m -112, 0 a 112,112 0 1,1 224,0 a 112,112 0 1,1 -224,0" fill="transparent" />
           <text class="font-mild font-bold text-[13px] tracking-[0.24em] fill-white uppercase">
@@ -98,18 +110,18 @@
   </div>
 
   <!-- State 2: Turned Around Front Card -->
-  <div class="absolute inset-0 z-20 w-full h-full p-3 sm:p-10 md:p-14 flex flex-col justify-end md:justify-center md:items-end transition-all duration-1000 ease-out"
+  <div class="absolute inset-0 z-20 w-full h-full p-3 pb-4 sm:p-10 md:p-14 flex flex-col justify-end md:justify-center md:items-end transition-all duration-1000 ease-out"
        [class.opacity-100]="isHeroTurnedAround()"
        [class.opacity-0]="!isHeroTurnedAround()"
        [class.pointer-events-none]="!isHeroTurnedAround()"
        [class.translate-x-0]="isHeroTurnedAround()"
        [class.translate-x-10]="!isHeroTurnedAround()">
-    <div class="card-glass w-full max-w-sm sm:max-w-lg p-4 sm:p-7 border-white/20 shadow-2xl space-y-2.5 sm:space-y-4" style="background: rgba(10, 13, 22, 0.94)">
+    <div class="card-glass w-full max-w-[16.5rem] mx-auto sm:mx-0 sm:max-w-lg p-2.5 sm:p-7 border-white/20 shadow-2xl space-y-1.5 sm:space-y-4" style="background: rgba(10, 13, 22, 0.88)">
       <!-- Card Header: Hey! greeting + Back to desk button -->
       <div class="flex items-center justify-between border-b border-white/10 pb-2 sm:pb-3">
-        <span class="font-mild font-bold text-2xl sm:text-3xl md:text-4xl text-white flex items-center gap-2">
+        <span class="font-mild font-bold text-lg sm:text-3xl md:text-4xl text-white flex items-center gap-1.5 sm:gap-2">
           <span>Hey!</span>
-          <span class="text-2xl sm:text-3xl animate-wave">👋</span>
+          <span class="text-lg sm:text-3xl animate-wave">👋</span>
         </span>
         <button (click)="toggleHeroTurnAround()"
                 class="text-[11px] sm:text-xs font-mono text-slate-200 hover:text-white px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/10 hover:bg-emerald-500/20 border border-white/20 hover:border-emerald-400/50 cursor-pointer flex items-center gap-1.5 transition-all shadow-sm"
@@ -121,17 +133,18 @@
 
       <!-- Candidate Name & Designation -->
       <div class="space-y-0.5 sm:space-y-1">
-        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
+        <div class="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
           <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           Full Stack Developer
         </div>
-        <h1 class="text-xl sm:text-2xl md:text-3xl font-mild font-bold text-white tracking-tight">
+        <h1 class="text-base sm:text-2xl md:text-3xl font-mild font-bold text-white tracking-tight">
           Swathy Krishna
         </h1>
+        <p class="sm:hidden font-mono text-[10px] uppercase tracking-wider text-emerald-400">Full Stack Developer</p>
       </div>
 
       <!-- Current Company & Role Details -->
-      <div class="rounded-xl bg-white/[0.04] border border-white/10 p-2.5 sm:p-3.5 flex items-start gap-2.5 sm:gap-3">
+      <div class="hidden sm:flex rounded-xl bg-white/[0.04] border border-white/10 p-2.5 sm:p-3.5 items-start gap-2.5 sm:gap-3">
         <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 grid place-items-center flex-shrink-0 text-sm sm:text-base font-bold shadow-sm">
           🏢
         </div>
@@ -147,7 +160,7 @@
       </div>
 
       <!-- Provision Languages & Tech Stack -->
-      <div class="space-y-1.5 sm:space-y-2">
+      <div class="hidden sm:block space-y-1.5 sm:space-y-2">
         <div class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
           <span>⚡ Key Tech Stack</span>
         </div>
@@ -177,18 +190,20 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="pt-1 sm:pt-2 flex flex-wrap items-center gap-2 sm:gap-3">
-        <button (click)="scrollTo('manifesto')" class="btn btn-accent !py-2 !px-3.5 sm:!py-2.5 sm:!px-5 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+      <div class="pt-0.5 sm:pt-2 flex items-center gap-1.5 sm:flex-wrap sm:gap-3">
+        <button (click)="scrollTo('manifesto')" class="btn btn-accent whitespace-nowrap !py-1.5 !px-2.5 sm:!py-2.5 sm:!px-5 font-bold text-[11px] sm:text-sm flex items-center gap-1">
           <span>Get to know me</span>
           <span>↗</span>
         </button>
-        <button (click)="scrollTo('selected-works')" class="btn hover:border-emerald-400 !py-2 !px-3 sm:!py-2.5 sm:!px-4 text-xs sm:text-sm flex items-center gap-1.5">
-          <span>Selected Works</span>
-          <span class="text-[11px] sm:text-xs font-mono text-slate-400">02</span>
+        <button (click)="scrollTo('selected-works')" class="btn whitespace-nowrap hover:border-emerald-400 !py-1.5 !px-2.5 sm:!py-2.5 sm:!px-4 text-[11px] sm:text-sm flex items-center gap-1">
+          <span class="sm:hidden">Works</span><span class="hidden sm:inline">Selected Works</span>
+          <span class="hidden sm:inline text-[11px] sm:text-xs font-mono text-slate-400">02</span>
         </button>
-        <a [href]="candidate.linkedin" target="_blank" class="btn text-xs font-mono !py-2 !px-3 sm:!py-2.5 sm:!px-4 hover:border-emerald-400">
-          LinkedIn ↗
-        </a>
+        <span class="hidden sm:contents">
+          <a [href]="candidate.linkedin" target="_blank" class="btn text-xs font-mono !py-2 !px-3 sm:!py-2.5 sm:!px-4 hover:border-emerald-400">
+            LinkedIn ↗
+          </a>
+        </span>
       </div>
     </div>
   </div>
